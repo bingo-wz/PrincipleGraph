@@ -5,9 +5,21 @@ PrincipleGraph 使用语义化版本记录可公开验证的产品能力。日�
 
 ## [Unreleased]
 
-### 计划
+## [0.3.0] - 2026-07-25
 
-- 将原型知识页迁移为由 Content Pack 加载和编译的数据驱动内容。
+### 新增
+
+- 构建期 Content Pack Runtime、页面索引、素材索引和自动统计；
+- 首个真实 Java HTTP 请求 Content Pack；
+- 内容包版本、状态、作者和更新时间元数据；
+- 解释锚点、引用锚点和正式内容发布要求校验；
+- M1 数据驱动内容引擎说明与架构决策记录。
+
+### 变更
+
+- 8 个知识页、72 个节点、64 条主链路边和 20 个素材迁移为 JSON；
+- 导航入口、搜索、下钻、双链、素材库和数量统计改为消费同一 Content Pack；
+- 移除 React/TypeScript 中的知识页和素材文案副本。
 
 ## [0.2.0] - 2026-07-25
 
@@ -34,6 +46,7 @@ PrincipleGraph 使用语义化版本记录可公开验证的产品能力。日�
 - 提供 8 个 Java 原理知识页和首个可点击原型；
 - 建立 Content Schema v1、语义校验、CI 与开源治理文件。
 
-[Unreleased]: https://github.com/bingo-wz/PrincipleGraph/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/bingo-wz/PrincipleGraph/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/bingo-wz/PrincipleGraph/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/bingo-wz/PrincipleGraph/compare/v0.1.0-m0...v0.2.0
 [0.1.0-m0]: https://github.com/bingo-wz/PrincipleGraph/releases/tag/v0.1.0-m0

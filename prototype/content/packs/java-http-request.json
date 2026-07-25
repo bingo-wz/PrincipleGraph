@@ -1,0 +1,2384 @@
+{
+  "schemaVersion": 1,
+  "packVersion": "1.0.0",
+  "status": "PUBLISHED",
+  "updatedAt": "2026-07-25",
+  "authors": [
+    "PrincipleGraph Maintainers"
+  ],
+  "space": {
+    "key": "java-backend",
+    "name": "Java 后端原理图谱",
+    "type": "PUBLIC_LIBRARY"
+  },
+  "scenarios": [
+    {
+      "key": "http-request-end-to-end",
+      "title": "一次 HTTP 请求全景",
+      "summary": "从浏览器进入多实例 Java 服务，深入 Spring、MySQL、JVM 并返回。",
+      "type": "LEARNING",
+      "entryPage": "http-request-panorama",
+      "sortOrder": 10,
+      "context": {
+        "java": "21",
+        "stack": "Spring MVC",
+        "database": "MySQL 8.4"
+      }
+    }
+  ],
+  "assetLibrary": [
+    {
+      "key": "web-application",
+      "category": "CLIENT",
+      "glyphKey": "web",
+      "name": {
+        "zh": "Web 应用",
+        "en": "Web Application"
+      },
+      "description": {
+        "zh": "浏览器或 Web 前端入口。",
+        "en": "Browser or web frontend entry point."
+      },
+      "aliases": [
+        "browser",
+        "frontend",
+        "web",
+        "浏览器",
+        "前端"
+      ]
+    },
+    {
+      "key": "mobile-client",
+      "category": "CLIENT",
+      "glyphKey": "mobile",
+      "name": {
+        "zh": "移动客户端",
+        "en": "Mobile Client"
+      },
+      "description": {
+        "zh": "iOS、Android 或小程序客户端。",
+        "en": "iOS, Android, or mini-app client."
+      },
+      "aliases": [
+        "mobile",
+        "phone",
+        "app",
+        "移动端",
+        "手机"
+      ]
+    },
+    {
+      "key": "cloud",
+      "category": "NETWORK",
+      "glyphKey": "cloud",
+      "name": {
+        "zh": "云环境",
+        "en": "Cloud"
+      },
+      "description": {
+        "zh": "云平台、外部网络或受管边界。",
+        "en": "Cloud platform, external network, or managed boundary."
+      },
+      "aliases": [
+        "cloud",
+        "internet",
+        "云",
+        "公网"
+      ]
+    },
+    {
+      "key": "dns",
+      "category": "NETWORK",
+      "glyphKey": "dns",
+      "name": {
+        "zh": "DNS 服务",
+        "en": "DNS Service"
+      },
+      "description": {
+        "zh": "将域名解析为网络地址。",
+        "en": "Resolves domain names to network addresses."
+      },
+      "aliases": [
+        "dns",
+        "domain",
+        "域名",
+        "解析"
+      ]
+    },
+    {
+      "key": "cdn",
+      "category": "NETWORK",
+      "glyphKey": "cdn",
+      "name": {
+        "zh": "CDN / 边缘节点",
+        "en": "CDN / Edge"
+      },
+      "description": {
+        "zh": "边缘缓存、TLS 终止和安全防护。",
+        "en": "Edge caching, TLS termination, and protection."
+      },
+      "aliases": [
+        "cdn",
+        "edge",
+        "waf",
+        "边缘",
+        "缓存"
+      ]
+    },
+    {
+      "key": "load-balancer",
+      "category": "NETWORK",
+      "glyphKey": "load-balancer",
+      "name": {
+        "zh": "负载均衡器",
+        "en": "Load Balancer"
+      },
+      "description": {
+        "zh": "在多个健康目标之间分配请求。",
+        "en": "Distributes requests across healthy targets."
+      },
+      "aliases": [
+        "lb",
+        "load balancer",
+        "负载均衡",
+        "流量"
+      ]
+    },
+    {
+      "key": "application-server",
+      "category": "COMPUTE",
+      "glyphKey": "server",
+      "name": {
+        "zh": "应用服务器",
+        "en": "Application Server"
+      },
+      "description": {
+        "zh": "承载应用进程、容器或服务实例。",
+        "en": "Hosts an application process, container, or service instance."
+      },
+      "aliases": [
+        "server",
+        "service",
+        "java",
+        "tomcat",
+        "服务器",
+        "服务"
+      ]
+    },
+    {
+      "key": "multi-instance-server",
+      "category": "COMPUTE",
+      "glyphKey": "multi-server",
+      "name": {
+        "zh": "多实例服务",
+        "en": "Multi-instance Service"
+      },
+      "description": {
+        "zh": "表示同一服务的多个副本，实际数量由 Multiplicity 决定。",
+        "en": "Represents replicas of one service; Multiplicity carries the count."
+      },
+      "aliases": [
+        "replica",
+        "cluster",
+        "instance",
+        "集群",
+        "实例",
+        "副本"
+      ]
+    },
+    {
+      "key": "relational-database",
+      "category": "DATA",
+      "glyphKey": "database",
+      "name": {
+        "zh": "关系型数据库",
+        "en": "Relational Database"
+      },
+      "description": {
+        "zh": "使用表、行、约束和事务组织数据。",
+        "en": "Organizes data with tables, rows, constraints, and transactions."
+      },
+      "aliases": [
+        "mysql",
+        "postgresql",
+        "sql",
+        "rdbms",
+        "关系数据库"
+      ]
+    },
+    {
+      "key": "document-database",
+      "category": "DATA",
+      "glyphKey": "document-db",
+      "name": {
+        "zh": "文档数据库",
+        "en": "Document Database"
+      },
+      "description": {
+        "zh": "以 JSON 或文档结构保存聚合数据。",
+        "en": "Stores aggregate data as JSON-like documents."
+      },
+      "aliases": [
+        "mongodb",
+        "document",
+        "json",
+        "文档数据库"
+      ]
+    },
+    {
+      "key": "columnar-database",
+      "category": "DATA",
+      "glyphKey": "database",
+      "name": {
+        "zh": "列式数据库",
+        "en": "Columnar Database"
+      },
+      "description": {
+        "zh": "按列组织分析型数据。",
+        "en": "Stores analytical data by column."
+      },
+      "aliases": [
+        "column",
+        "olap",
+        "clickhouse",
+        "列存"
+      ]
+    },
+    {
+      "key": "graph-database",
+      "category": "DATA",
+      "glyphKey": "graph-db",
+      "name": {
+        "zh": "图数据库",
+        "en": "Graph Database"
+      },
+      "description": {
+        "zh": "以节点和关系表达高连接度数据。",
+        "en": "Models highly connected data as nodes and relationships."
+      },
+      "aliases": [
+        "graph",
+        "neo4j",
+        "图数据库",
+        "关系"
+      ]
+    },
+    {
+      "key": "cache",
+      "category": "DATA",
+      "glyphKey": "cache",
+      "name": {
+        "zh": "缓存",
+        "en": "Cache"
+      },
+      "description": {
+        "zh": "保存热点键值或中间结果。",
+        "en": "Stores hot key-value data or intermediate results."
+      },
+      "aliases": [
+        "redis",
+        "cache",
+        "kv",
+        "缓存",
+        "键值"
+      ]
+    },
+    {
+      "key": "object-storage",
+      "category": "STORAGE",
+      "glyphKey": "object-storage",
+      "name": {
+        "zh": "对象存储",
+        "en": "Object Storage"
+      },
+      "description": {
+        "zh": "按对象与 Key 保存文件和大对象。",
+        "en": "Stores files and blobs as keyed objects."
+      },
+      "aliases": [
+        "s3",
+        "r2",
+        "oss",
+        "blob",
+        "对象存储"
+      ]
+    },
+    {
+      "key": "cold-storage",
+      "category": "STORAGE",
+      "glyphKey": "archive",
+      "name": {
+        "zh": "冷存储",
+        "en": "Cold Storage"
+      },
+      "description": {
+        "zh": "低频访问、较长恢复时间的归档介质。",
+        "en": "Archive medium for infrequent access and slower retrieval."
+      },
+      "aliases": [
+        "cold",
+        "glacier",
+        "冷存储",
+        "归档"
+      ]
+    },
+    {
+      "key": "stack-storage",
+      "category": "STORAGE",
+      "glyphKey": "archive",
+      "name": {
+        "zh": "栈式存储",
+        "en": "Stack Storage"
+      },
+      "description": {
+        "zh": "用于表达栈帧、分层页面或顺序数据。",
+        "en": "Represents stack frames, layered pages, or ordered data."
+      },
+      "aliases": [
+        "stack",
+        "page",
+        "栈",
+        "栈帧",
+        "页面"
+      ]
+    },
+    {
+      "key": "archive",
+      "category": "STORAGE",
+      "glyphKey": "archive",
+      "name": {
+        "zh": "归档",
+        "en": "Archive"
+      },
+      "description": {
+        "zh": "长期保存的历史文件或快照。",
+        "en": "Long-term historical files or snapshots."
+      },
+      "aliases": [
+        "archive",
+        "snapshot",
+        "归档",
+        "快照"
+      ]
+    },
+    {
+      "key": "message-queue",
+      "category": "MESSAGING",
+      "glyphKey": "queue",
+      "name": {
+        "zh": "消息队列",
+        "en": "Message Queue"
+      },
+      "description": {
+        "zh": "缓冲、解耦并异步传递消息。",
+        "en": "Buffers, decouples, and asynchronously delivers messages."
+      },
+      "aliases": [
+        "mq",
+        "kafka",
+        "rabbitmq",
+        "queue",
+        "消息队列"
+      ]
+    },
+    {
+      "key": "pipeline",
+      "category": "MESSAGING",
+      "glyphKey": "pipeline",
+      "name": {
+        "zh": "处理管道",
+        "en": "Pipeline"
+      },
+      "description": {
+        "zh": "串联过滤、转换或构建步骤。",
+        "en": "Chains filtering, transformation, or build stages."
+      },
+      "aliases": [
+        "pipeline",
+        "filter",
+        "chain",
+        "管道",
+        "过滤器链"
+      ]
+    },
+    {
+      "key": "auth-iam",
+      "category": "SECURITY",
+      "glyphKey": "auth",
+      "name": {
+        "zh": "认证与 IAM",
+        "en": "Auth & IAM"
+      },
+      "description": {
+        "zh": "身份认证、授权和访问控制边界。",
+        "en": "Authentication, authorization, and access-control boundary."
+      },
+      "aliases": [
+        "auth",
+        "iam",
+        "security",
+        "鉴权",
+        "认证",
+        "授权"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "slug": "http-request-panorama",
+      "title": "一次 HTTP 请求全景",
+      "question": "外部请求如何找到 Java 实例、执行业务并返回？",
+      "summary": "这一层只看系统级路由。沿主链路从浏览器出发，经过边缘组件与服务实例，再沿已有连接返回。",
+      "assumption": "假设动态 HTTPS 请求需要回源；连接可能被 keep-alive 或 HTTP/2 复用。",
+      "domain": "architecture",
+      "domainLabel": "系统全景",
+      "depthHint": 0,
+      "aliases": [],
+      "tags": [
+        "architecture"
+      ],
+      "entryNodeKey": "browser",
+      "exitNodeKeys": [
+        "browser-response"
+      ],
+      "layout": {
+        "diagramType": "SOFTWARE_ARCHITECTURE",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "browser",
+          "type": "ENTRY",
+          "label": "浏览器",
+          "subtitle": "入口",
+          "description": "组装 URL、Header、Cookie 与请求体，然后发送 HTTPS 请求。",
+          "assetKey": "web-application"
+        },
+        {
+          "key": "dns",
+          "type": "COMPONENT",
+          "label": "DNS 解析",
+          "subtitle": "名称 → 地址",
+          "description": "把域名解析为可访问的边缘地址；DNS 不会直接执行 Java Controller。",
+          "assetKey": "dns"
+        },
+        {
+          "key": "edge",
+          "type": "COMPONENT",
+          "label": "CDN / WAF",
+          "subtitle": "TLS 与安全边界",
+          "description": "完成边缘安全检查。本场景假设没有静态命中，请求继续回源。",
+          "assetKey": "cdn"
+        },
+        {
+          "key": "load-balancer",
+          "type": "COMPONENT",
+          "label": "负载均衡器",
+          "subtitle": "选择 Gateway",
+          "description": "从健康的 Gateway 节点中选择一个目标，转发连接或请求。",
+          "assetKey": "load-balancer",
+          "drillTo": "edge-routing-and-discovery"
+        },
+        {
+          "key": "gateway",
+          "type": "COMPONENT",
+          "label": "API Gateway",
+          "subtitle": "路由 · 鉴权 · 限流",
+          "description": "把路径匹配到逻辑服务，获取候选实例并选择健康目标。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "G",
+            "unit": "个 Gateway",
+            "visualCount": 2,
+            "selectedCount": 1,
+            "note": "Gateway 副本数由部署与健康状态动态决定；当前请求只经过其中 1 个实例。"
+          },
+          "drillTo": "edge-routing-and-discovery"
+        },
+        {
+          "key": "service",
+          "type": "RUNTIME",
+          "label": "Java 服务实例",
+          "subtitle": "容器内运行",
+          "description": "请求到达服务器和容器后，由 Servlet 容器接收。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "N",
+            "unit": "个 Java 实例",
+            "visualCount": 3,
+            "selectedCount": 1,
+            "note": "三个图标仅用于表达多实例；实际副本数是动态 N，本次请求命中其中 1 个。"
+          },
+          "drillTo": "server-container-path"
+        },
+        {
+          "key": "business",
+          "type": "ACTION",
+          "label": "业务与数据访问",
+          "subtitle": "规则 · 事务 · SQL",
+          "description": "Controller 调用应用服务，事务代理包围数据访问。",
+          "assetKey": "pipeline",
+          "drillTo": "service-business-transaction"
+        },
+        {
+          "key": "response-path",
+          "type": "COMPONENT",
+          "label": "响应回程",
+          "subtitle": "沿已有连接返回",
+          "description": "响应按代理和连接上下文反向穿过 Gateway 与边缘组件。",
+          "assetKey": "message-queue"
+        },
+        {
+          "key": "browser-response",
+          "type": "EXIT",
+          "label": "浏览器收到响应",
+          "subtitle": "出口",
+          "description": "解析状态码、响应 Header 和响应体。",
+          "assetKey": "web-application"
+        }
+      ],
+      "edges": [
+        {
+          "key": "browser-to-dns",
+          "from": "browser",
+          "to": "dns",
+          "type": "SYNC",
+          "label": "解析域名",
+          "sequence": 1
+        },
+        {
+          "key": "dns-to-edge",
+          "from": "dns",
+          "to": "edge",
+          "type": "SYNC",
+          "label": "连接边缘",
+          "sequence": 2
+        },
+        {
+          "key": "edge-to-load-balancer",
+          "from": "edge",
+          "to": "load-balancer",
+          "type": "SYNC",
+          "label": "动态回源",
+          "sequence": 3
+        },
+        {
+          "key": "load-balancer-to-gateway",
+          "from": "load-balancer",
+          "to": "gateway",
+          "type": "SYNC",
+          "label": "转发",
+          "sequence": 4
+        },
+        {
+          "key": "gateway-to-service",
+          "from": "gateway",
+          "to": "service",
+          "type": "SYNC",
+          "label": "选择实例",
+          "sequence": 5
+        },
+        {
+          "key": "service-to-business",
+          "from": "service",
+          "to": "business",
+          "type": "SYNC",
+          "label": "进入业务",
+          "sequence": 6
+        },
+        {
+          "key": "business-to-response-path",
+          "from": "business",
+          "to": "response-path",
+          "type": "SYNC",
+          "label": "生成结果",
+          "sequence": 7
+        },
+        {
+          "key": "response-path-to-browser-response",
+          "from": "response-path",
+          "to": "browser-response",
+          "type": "RETURN",
+          "label": "HTTP Response",
+          "sequence": 8
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "这一层只看系统级路由。沿主链路从浏览器出发，经过边缘组件与服务实例，再沿已有连接返回。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "假设动态 HTTPS 请求需要回源；连接可能被 keep-alive 或 HTTP/2 复用。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "CDN 静态命中时，可在边缘直接返回。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "DNS、TLS、Gateway、服务实例或数据库超时，失败位置和补偿策略不同。",
+          "sortOrder": 101
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "jvm-thread-execution",
+          "relation": "RELATED",
+          "label": "Java 实例最终在线程中运行请求"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "mysql-query-and-index",
+          "relation": "RELATED",
+          "label": "数据访问的底层路径"
+        }
+      ]
+    },
+    {
+      "slug": "edge-routing-and-discovery",
+      "title": "边缘路由与服务发现",
+      "question": "Gateway 如何把请求路由到一个健康服务实例？",
+      "summary": "控制面提供候选实例，数据面匹配路由、过滤候选并选择目标。鉴权或限流失败时不会继续选实例。",
+      "assumption": "不绑定 Eureka、Nacos 或 Consul；实例列表允许有短暂缓存。",
+      "domain": "microservice",
+      "domainLabel": "微服务",
+      "depthHint": 1,
+      "aliases": [],
+      "tags": [
+        "microservice"
+      ],
+      "entryNodeKey": "gateway-ingress",
+      "exitNodeKeys": [
+        "selected-instance"
+      ],
+      "layout": {
+        "diagramType": "LOGICAL_DATA_FLOW",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "gateway-ingress",
+          "type": "ENTRY",
+          "label": "Gateway 入站",
+          "subtitle": "入口",
+          "description": "接收外部负载均衡器转发的 HTTP 请求。",
+          "assetKey": "multi-instance-server"
+        },
+        {
+          "key": "normalize",
+          "type": "ACTION",
+          "label": "请求规范化",
+          "subtitle": "Host · Path · Method",
+          "description": "解析路由所需的 Host、Path、Method 和关键 Header。",
+          "assetKey": "pipeline"
+        },
+        {
+          "key": "security",
+          "type": "COMPONENT",
+          "label": "鉴权",
+          "subtitle": "401 / 403 边界",
+          "description": "验证身份和权限；失败时直接返回，不进入后续实例选择。",
+          "assetKey": "auth-iam"
+        },
+        {
+          "key": "rate-limit",
+          "type": "COMPONENT",
+          "label": "限流",
+          "subtitle": "配额与流量保护",
+          "description": "检查租户、用户或路由配额；失败通常返回 429。",
+          "assetKey": "pipeline"
+        },
+        {
+          "key": "route-match",
+          "type": "ACTION",
+          "label": "路由匹配",
+          "subtitle": "请求 → 服务 ID",
+          "description": "把请求特征映射到一个逻辑服务 ID。"
+        },
+        {
+          "key": "instance-supplier",
+          "type": "DATASTORE",
+          "label": "实例列表",
+          "subtitle": "发现缓存 / 注册中心",
+          "description": "从服务发现实现中取得候选 ServiceInstance 列表。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "N",
+            "unit": "个候选实例",
+            "visualCount": 4,
+            "note": "候选数量随注册、下线、健康检查和缓存时效变化，图标数量不代表实时值。"
+          }
+        },
+        {
+          "key": "health-filter",
+          "type": "ACTION",
+          "label": "健康与元数据过滤",
+          "subtitle": "zone · hint · health",
+          "description": "去除不健康或不满足 zone、版本、hint 的实例。"
+        },
+        {
+          "key": "load-balance",
+          "type": "COMPONENT",
+          "label": "负载均衡策略",
+          "subtitle": "Round Robin / 权重",
+          "description": "从候选集选择一个实例；重试必须考虑请求幂等性。",
+          "assetKey": "load-balancer"
+        },
+        {
+          "key": "selected-instance",
+          "type": "EXIT",
+          "label": "目标实例",
+          "subtitle": "出口",
+          "description": "使用目标地址重写 URI 并建立下游请求。",
+          "assetKey": "application-server",
+          "multiplicity": {
+            "mode": "EXACT",
+            "value": "1",
+            "unit": "个已选实例",
+            "visualCount": 1,
+            "selectedCount": 1,
+            "note": "本页描述一次负载均衡决策，因此主链路只选择 1 个目标实例。"
+          },
+          "drillTo": "server-container-path"
+        }
+      ],
+      "edges": [
+        {
+          "key": "gateway-ingress-to-normalize",
+          "from": "gateway-ingress",
+          "to": "normalize",
+          "type": "SYNC",
+          "label": "解析",
+          "sequence": 1
+        },
+        {
+          "key": "normalize-to-security",
+          "from": "normalize",
+          "to": "security",
+          "type": "SYNC",
+          "label": "身份上下文",
+          "sequence": 2
+        },
+        {
+          "key": "security-to-rate-limit",
+          "from": "security",
+          "to": "rate-limit",
+          "type": "SYNC",
+          "label": "通过",
+          "sequence": 3
+        },
+        {
+          "key": "rate-limit-to-route-match",
+          "from": "rate-limit",
+          "to": "route-match",
+          "type": "SYNC",
+          "label": "通过",
+          "sequence": 4
+        },
+        {
+          "key": "route-match-to-instance-supplier",
+          "from": "route-match",
+          "to": "instance-supplier",
+          "type": "SYNC",
+          "label": "查实例",
+          "sequence": 5
+        },
+        {
+          "key": "instance-supplier-to-health-filter",
+          "from": "instance-supplier",
+          "to": "health-filter",
+          "type": "SYNC",
+          "label": "过滤",
+          "sequence": 6
+        },
+        {
+          "key": "health-filter-to-load-balance",
+          "from": "health-filter",
+          "to": "load-balance",
+          "type": "SYNC",
+          "label": "候选集",
+          "sequence": 7
+        },
+        {
+          "key": "load-balance-to-selected-instance",
+          "from": "load-balance",
+          "to": "selected-instance",
+          "type": "RETURN",
+          "label": "重写 URI",
+          "sequence": 8
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "控制面提供候选实例，数据面匹配路由、过滤候选并选择目标。鉴权或限流失败时不会继续选实例。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "不绑定 Eureka、Nacos 或 Consul；实例列表允许有短暂缓存。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "候选实例为空时返回 503，而不是随机选择已下线实例。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "实例缓存减少注册中心压力，但会带来短暂陈旧。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "重试次数必须与超时预算和请求幂等性共同设计。",
+          "sortOrder": 102
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "http-request-panorama",
+          "relation": "RELATED",
+          "label": "本页是 Gateway 节点的下层原理"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "spring-web-request-chain",
+          "relation": "RELATED",
+          "label": "目标实例接收请求后的下一段"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Spring Cloud LoadBalancer",
+          "url": "https://docs.spring.io/spring-cloud-commons/reference/spring-cloud-commons/loadbalancer.html",
+          "accessedOn": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "slug": "server-container-path",
+      "title": "服务器与 Docker 入站",
+      "question": "网络包到达宿主机后，怎样进入容器里的 Java 进程？",
+      "summary": "这一页以 Linux + Docker user-defined bridge + 发布端口为前提，沿宿主机网络栈、bridge 和容器 network namespace 进入 JVM socket。",
+      "assumption": "host、overlay 等网络模式走不同路径，应作为场景变体单独表达。",
+      "domain": "linux-docker",
+      "domainLabel": "Linux / Docker",
+      "depthHint": 1,
+      "aliases": [],
+      "tags": [
+        "linux-docker"
+      ],
+      "entryNodeKey": "host-nic",
+      "exitNodeKeys": [
+        "jvm-socket"
+      ],
+      "layout": {
+        "diagramType": "SOFTWARE_ARCHITECTURE",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "host-nic",
+          "type": "ENTRY",
+          "label": "宿主机网卡",
+          "subtitle": "入口",
+          "description": "接收发往宿主机地址的网络帧和数据包。",
+          "assetKey": "application-server"
+        },
+        {
+          "key": "linux-stack",
+          "type": "RUNTIME",
+          "label": "Linux 网络栈",
+          "subtitle": "IP · TCP",
+          "description": "完成 IP、TCP 处理，并进入本机转发/输入决策。",
+          "assetKey": "application-server"
+        },
+        {
+          "key": "netfilter",
+          "type": "COMPONENT",
+          "label": "Netfilter / NAT",
+          "subtitle": "目标改写与转发",
+          "description": "Docker 根据端口发布配置安装网络规则，将流量导向容器。"
+        },
+        {
+          "key": "bridge",
+          "type": "COMPONENT",
+          "label": "Docker bridge",
+          "subtitle": "宿主机软件网桥",
+          "description": "连接同一 Docker daemon 上的容器虚拟接口并提供隔离。",
+          "assetKey": "cloud"
+        },
+        {
+          "key": "host-veth",
+          "type": "COMPONENT",
+          "label": "Host veth",
+          "subtitle": "虚拟网卡一端",
+          "description": "veth pair 的宿主机一侧连接到 Docker bridge。"
+        },
+        {
+          "key": "container-netns",
+          "type": "RUNTIME",
+          "label": "容器网络命名空间",
+          "subtitle": "隔离网络栈",
+          "description": "通过容器侧 veth 进入独立接口、路由和 socket 视图。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "N",
+            "unit": "个容器副本",
+            "visualCount": 3,
+            "selectedCount": 1,
+            "note": "系统可以有多个容器副本；本层只展开当前请求命中的 1 个容器网络命名空间。"
+          }
+        },
+        {
+          "key": "container-port",
+          "type": "COMPONENT",
+          "label": "容器监听端口",
+          "subtitle": "例如 8080",
+          "description": "容器网络栈把连接匹配到 Java 进程监听的 socket。"
+        },
+        {
+          "key": "jvm-socket",
+          "type": "EXIT",
+          "label": "JVM / Tomcat socket",
+          "subtitle": "出口",
+          "description": "连接进入 Tomcat Connector 的处理范围。",
+          "assetKey": "application-server",
+          "drillTo": "spring-web-request-chain"
+        }
+      ],
+      "edges": [
+        {
+          "key": "host-nic-to-linux-stack",
+          "from": "host-nic",
+          "to": "linux-stack",
+          "type": "SYNC",
+          "label": "进入内核",
+          "sequence": 1
+        },
+        {
+          "key": "linux-stack-to-netfilter",
+          "from": "linux-stack",
+          "to": "netfilter",
+          "type": "SYNC",
+          "label": "端口发布规则",
+          "sequence": 2
+        },
+        {
+          "key": "netfilter-to-bridge",
+          "from": "netfilter",
+          "to": "bridge",
+          "type": "SYNC",
+          "label": "桥接",
+          "sequence": 3
+        },
+        {
+          "key": "bridge-to-host-veth",
+          "from": "bridge",
+          "to": "host-veth",
+          "type": "SYNC",
+          "label": "veth",
+          "sequence": 4
+        },
+        {
+          "key": "host-veth-to-container-netns",
+          "from": "host-veth",
+          "to": "container-netns",
+          "type": "SYNC",
+          "label": "跨 namespace",
+          "sequence": 5
+        },
+        {
+          "key": "container-netns-to-container-port",
+          "from": "container-netns",
+          "to": "container-port",
+          "type": "SYNC",
+          "label": "端口匹配",
+          "sequence": 6
+        },
+        {
+          "key": "container-port-to-jvm-socket",
+          "from": "container-port",
+          "to": "jvm-socket",
+          "type": "RETURN",
+          "label": "socket 就绪",
+          "sequence": 7
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "这一页以 Linux + Docker user-defined bridge + 发布端口为前提，沿宿主机网络栈、bridge 和容器 network namespace 进入 JVM socket。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "host、overlay 等网络模式走不同路径，应作为场景变体单独表达。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "安全组、防火墙或 Netfilter 规则可在进入容器前丢弃流量。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "未发布端口默认不能从其他网络直接访问。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "host 网络不会经过同样的 bridge/veth 路径。",
+          "sortOrder": 102
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "jvm-thread-execution",
+          "relation": "RELATED",
+          "label": "socket 任务如何在线程中运行"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "http-request-panorama",
+          "relation": "RELATED",
+          "label": "本页对应 Java 实例的服务器内部路径"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Docker bridge network driver",
+          "url": "https://docs.docker.com/engine/network/drivers/bridge/",
+          "accessedOn": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "slug": "spring-web-request-chain",
+      "title": "Spring Web 请求链路",
+      "question": "Tomcat 接收请求后，Spring MVC 如何调用 Controller？",
+      "summary": "Servlet FilterChain 在 Spring MVC 之前运行；DispatcherServlet 再通过 HandlerMapping 与 HandlerAdapter 定位并调用 Controller。",
+      "assumption": "只描述 Servlet 栈的同步主链路，不混入 WebFlux 或 async dispatch。",
+      "domain": "spring-mvc",
+      "domainLabel": "Spring MVC",
+      "depthHint": 2,
+      "aliases": [],
+      "tags": [
+        "spring-mvc"
+      ],
+      "entryNodeKey": "connector",
+      "exitNodeKeys": [
+        "response"
+      ],
+      "layout": {
+        "diagramType": "SEQUENCE",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "connector",
+          "type": "ENTRY",
+          "label": "Tomcat Connector",
+          "subtitle": "入口",
+          "description": "处理客户端连接并解析 HTTP 协议。",
+          "assetKey": "application-server"
+        },
+        {
+          "key": "executor",
+          "type": "RUNTIME",
+          "label": "Executor 工作线程",
+          "subtitle": "线程池",
+          "description": "Connector 使用内部线程池或共享 Executor 执行请求。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "T",
+            "unit": "个工作线程",
+            "visualCount": 4,
+            "selectedCount": 1,
+            "note": "线程池包含动态或配置数量的 Worker；当前请求在其中 1 个线程上执行。"
+          },
+          "drillTo": "jvm-thread-execution"
+        },
+        {
+          "key": "filter-chain",
+          "type": "COMPONENT",
+          "label": "Servlet FilterChain",
+          "subtitle": "安全 · 日志 · 编码",
+          "description": "Filter 可在进入 Spring MVC 前处理或提前终止请求。",
+          "assetKey": "pipeline"
+        },
+        {
+          "key": "dispatcher",
+          "type": "COMPONENT",
+          "label": "DispatcherServlet",
+          "subtitle": "Front Controller",
+          "description": "协调 Handler 查找、调用、返回值处理与异常解析。",
+          "assetKey": "application-server"
+        },
+        {
+          "key": "mapping",
+          "type": "ACTION",
+          "label": "HandlerMapping",
+          "subtitle": "请求 → Handler",
+          "description": "根据路径、方法等条件找到 Handler 和拦截器链。"
+        },
+        {
+          "key": "adapter",
+          "type": "COMPONENT",
+          "label": "HandlerAdapter",
+          "subtitle": "调用适配",
+          "description": "选择支持目标 Handler 的适配器并准备调用。"
+        },
+        {
+          "key": "arguments",
+          "type": "ACTION",
+          "label": "参数解析与校验",
+          "subtitle": "Header · Path · Body",
+          "description": "解析方法参数、读取消息体并执行 Bean Validation。"
+        },
+        {
+          "key": "controller",
+          "type": "COMPONENT",
+          "label": "Controller 方法",
+          "subtitle": "Web 入口方法",
+          "description": "接收应用请求并调用 Service；不应承载复杂业务规则。",
+          "assetKey": "application-server",
+          "drillTo": "service-business-transaction"
+        },
+        {
+          "key": "return-value",
+          "type": "ACTION",
+          "label": "返回值与消息转换",
+          "subtitle": "HttpMessageConverter",
+          "description": "处理返回值并序列化为响应体。"
+        },
+        {
+          "key": "response",
+          "type": "EXIT",
+          "label": "写回响应",
+          "subtitle": "出口",
+          "description": "响应经过拦截器与 Filter 退出路径后写入连接。",
+          "assetKey": "web-application"
+        }
+      ],
+      "edges": [
+        {
+          "key": "connector-to-executor",
+          "from": "connector",
+          "to": "executor",
+          "type": "SYNC",
+          "label": "提交任务",
+          "sequence": 1
+        },
+        {
+          "key": "executor-to-filter-chain",
+          "from": "executor",
+          "to": "filter-chain",
+          "type": "SYNC",
+          "label": "Servlet 调用",
+          "sequence": 2
+        },
+        {
+          "key": "filter-chain-to-dispatcher",
+          "from": "filter-chain",
+          "to": "dispatcher",
+          "type": "SYNC",
+          "label": "继续链路",
+          "sequence": 3
+        },
+        {
+          "key": "dispatcher-to-mapping",
+          "from": "dispatcher",
+          "to": "mapping",
+          "type": "SYNC",
+          "label": "查找 Handler",
+          "sequence": 4
+        },
+        {
+          "key": "mapping-to-adapter",
+          "from": "mapping",
+          "to": "adapter",
+          "type": "SYNC",
+          "label": "交给适配器",
+          "sequence": 5
+        },
+        {
+          "key": "adapter-to-arguments",
+          "from": "adapter",
+          "to": "arguments",
+          "type": "SYNC",
+          "label": "解析参数",
+          "sequence": 6
+        },
+        {
+          "key": "arguments-to-controller",
+          "from": "arguments",
+          "to": "controller",
+          "type": "SYNC",
+          "label": "调用",
+          "sequence": 7
+        },
+        {
+          "key": "controller-to-return-value",
+          "from": "controller",
+          "to": "return-value",
+          "type": "SYNC",
+          "label": "返回对象",
+          "sequence": 8
+        },
+        {
+          "key": "return-value-to-response",
+          "from": "return-value",
+          "to": "response",
+          "type": "RETURN",
+          "label": "退出 Filter",
+          "sequence": 9
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "Servlet FilterChain 在 Spring MVC 之前运行；DispatcherServlet 再通过 HandlerMapping 与 HandlerAdapter 定位并调用 Controller。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "只描述 Servlet 栈的同步主链路，不混入 WebFlux 或 async dispatch。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "Filter 可以提前写响应，后续 DispatcherServlet 不再执行。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "找不到 Handler、参数校验失败或消息转换失败都不会进入正常业务。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "Controller 异常可由 HandlerExceptionResolver 转换为错误响应。",
+          "sortOrder": 102
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "server-container-path",
+          "relation": "RELATED",
+          "label": "请求到达 Connector 之前的路径"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "jvm-thread-execution",
+          "relation": "RELATED",
+          "label": "Executor 工作线程的底层视角"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "service-business-transaction",
+          "relation": "RELATED",
+          "label": "Controller 之后的应用层"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Spring MVC DispatcherServlet Processing",
+          "url": "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/sequence.html",
+          "accessedOn": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "slug": "service-business-transaction",
+      "title": "业务与事务链路",
+      "question": "Service 调用中，声明式事务如何包围数据库操作？",
+      "summary": "外部调用先经过 Spring AOP 代理，TransactionInterceptor 使用事务元数据和事务管理器开启或加入事务，再调用业务方法。",
+      "assumption": "命令型同步请求、默认代理模式、PlatformTransactionManager 与关系数据库本地事务。",
+      "domain": "spring-transaction",
+      "domainLabel": "Spring Transaction",
+      "depthHint": 2,
+      "aliases": [],
+      "tags": [
+        "spring-transaction"
+      ],
+      "entryNodeKey": "controller-call",
+      "exitNodeKeys": [
+        "service-result"
+      ],
+      "layout": {
+        "diagramType": "LOGICAL_DATA_FLOW",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "controller-call",
+          "type": "ENTRY",
+          "label": "Controller 调用 Service",
+          "subtitle": "入口",
+          "description": "从 Web 层进入应用服务公开方法。",
+          "assetKey": "application-server"
+        },
+        {
+          "key": "proxy",
+          "type": "COMPONENT",
+          "label": "Spring AOP 代理",
+          "subtitle": "方法边界",
+          "description": "拦截从代理外部进入的调用；默认代理下内部自调用可能绕过拦截。",
+          "assetKey": "pipeline"
+        },
+        {
+          "key": "interceptor",
+          "type": "COMPONENT",
+          "label": "TransactionInterceptor",
+          "subtitle": "@Transactional",
+          "description": "读取传播、隔离、只读和回滚规则。",
+          "assetKey": "pipeline"
+        },
+        {
+          "key": "transaction-manager",
+          "type": "COMPONENT",
+          "label": "事务管理器",
+          "subtitle": "开启 / 加入事务",
+          "description": "根据传播行为创建或加入事务，并把资源绑定到当前线程。",
+          "assetKey": "application-server"
+        },
+        {
+          "key": "business-rule",
+          "type": "ACTION",
+          "label": "业务规则",
+          "subtitle": "校验 · 计算 · 编排",
+          "description": "检查业务状态并编排数据访问。"
+        },
+        {
+          "key": "repository",
+          "type": "COMPONENT",
+          "label": "Repository / Mapper",
+          "subtitle": "持久化边界",
+          "description": "使用当前事务资源执行 SQL 或 ORM 操作。",
+          "assetKey": "pipeline"
+        },
+        {
+          "key": "mysql",
+          "type": "DATASTORE",
+          "label": "MySQL 操作",
+          "subtitle": "查询 / 写入",
+          "description": "执行 SQL，并受数据库事务与锁语义约束。",
+          "assetKey": "relational-database",
+          "drillTo": "mysql-query-and-index"
+        },
+        {
+          "key": "complete-tx",
+          "type": "ACTION",
+          "label": "提交或回滚",
+          "subtitle": "结束事务",
+          "description": "正常返回时提交；异常是否回滚取决于回滚规则。"
+        },
+        {
+          "key": "service-result",
+          "type": "EXIT",
+          "label": "返回 Controller",
+          "subtitle": "出口",
+          "description": "返回结果或重新抛出异常，由 Web 层生成响应。",
+          "assetKey": "application-server"
+        }
+      ],
+      "edges": [
+        {
+          "key": "controller-call-to-proxy",
+          "from": "controller-call",
+          "to": "proxy",
+          "type": "SYNC",
+          "label": "代理拦截",
+          "sequence": 1
+        },
+        {
+          "key": "proxy-to-interceptor",
+          "from": "proxy",
+          "to": "interceptor",
+          "type": "SYNC",
+          "label": "读取元数据",
+          "sequence": 2
+        },
+        {
+          "key": "interceptor-to-transaction-manager",
+          "from": "interceptor",
+          "to": "transaction-manager",
+          "type": "SYNC",
+          "label": "事务决策",
+          "sequence": 3
+        },
+        {
+          "key": "transaction-manager-to-business-rule",
+          "from": "transaction-manager",
+          "to": "business-rule",
+          "type": "SYNC",
+          "label": "调用目标",
+          "sequence": 4
+        },
+        {
+          "key": "business-rule-to-repository",
+          "from": "business-rule",
+          "to": "repository",
+          "type": "SYNC",
+          "label": "访问数据",
+          "sequence": 5
+        },
+        {
+          "key": "repository-to-mysql",
+          "from": "repository",
+          "to": "mysql",
+          "type": "SYNC",
+          "label": "SQL",
+          "sequence": 6
+        },
+        {
+          "key": "mysql-to-complete-tx",
+          "from": "mysql",
+          "to": "complete-tx",
+          "type": "SYNC",
+          "label": "结果 / 异常",
+          "sequence": 7
+        },
+        {
+          "key": "complete-tx-to-service-result",
+          "from": "complete-tx",
+          "to": "service-result",
+          "type": "RETURN",
+          "label": "代理返回",
+          "sequence": 8
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "外部调用先经过 Spring AOP 代理，TransactionInterceptor 使用事务元数据和事务管理器开启或加入事务，再调用业务方法。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "命令型同步请求、默认代理模式、PlatformTransactionManager 与关系数据库本地事务。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "默认代理模式下，同类内部自调用可能让 @Transactional 不生效。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "imperative 事务通常绑定当前线程，不会自动传播到新建线程。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "Redis cache-aside 不受 MySQL 本地事务原子保护。",
+          "sortOrder": 102
+        },
+        {
+          "key": "branch-4",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 4",
+          "body": "默认回滚规则不等于所有 Exception 都回滚。",
+          "sortOrder": 103
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "spring-web-request-chain",
+          "relation": "RELATED",
+          "label": "调用 Service 的上层入口"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "jvm-thread-execution",
+          "relation": "RELATED",
+          "label": "线程绑定事务的运行时基础"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "mysql-query-and-index",
+          "relation": "RELATED",
+          "label": "SQL 的存储引擎路径"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Spring Declarative Transaction Implementation",
+          "url": "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-decl-explained.html",
+          "accessedOn": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "slug": "mysql-query-and-index",
+      "title": "MySQL 查询与索引",
+      "question": "普通二级索引查询如何找到 InnoDB 完整行？",
+      "summary": "优化器选择二级索引后，叶子记录给出主键；非覆盖查询再使用主键查聚簇索引。Buffer Pool 未命中时才读取存储页。",
+      "assumption": "MySQL 8.4、InnoDB、命中二级 B+Tree 的非覆盖查询。",
+      "domain": "mysql-innodb",
+      "domainLabel": "MySQL / InnoDB",
+      "depthHint": 3,
+      "aliases": [],
+      "tags": [
+        "mysql-innodb"
+      ],
+      "entryNodeKey": "jdbc",
+      "exitNodeKeys": [
+        "result-set"
+      ],
+      "layout": {
+        "diagramType": "LOGICAL_DATA_FLOW",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "jdbc",
+          "type": "ENTRY",
+          "label": "JDBC 发送 SQL",
+          "subtitle": "入口",
+          "description": "通过已有 MySQL 连接发送参数化 SQL。",
+          "assetKey": "application-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "C",
+            "unit": "条池化连接",
+            "visualCount": 3,
+            "selectedCount": 1,
+            "note": "连接池可维护 C 条连接；当前 SQL 只借用其中 1 条连接并对应 1 个 MySQL Session。"
+          }
+        },
+        {
+          "key": "session",
+          "type": "RUNTIME",
+          "label": "MySQL Session",
+          "subtitle": "连接上下文",
+          "description": "接收命令并保留认证、事务和会话状态。",
+          "assetKey": "relational-database"
+        },
+        {
+          "key": "parse",
+          "type": "ACTION",
+          "label": "解析与预处理",
+          "subtitle": "语法树 · 对象解析",
+          "description": "解析 SQL，解析表和列并完成必要校验。"
+        },
+        {
+          "key": "optimizer",
+          "type": "COMPONENT",
+          "label": "优化器",
+          "subtitle": "选择访问路径",
+          "description": "基于统计信息与代价选择索引、连接顺序和执行方式。"
+        },
+        {
+          "key": "executor",
+          "type": "COMPONENT",
+          "label": "Executor / Handler",
+          "subtitle": "调用存储引擎",
+          "description": "按计划调用 InnoDB 的访问接口。"
+        },
+        {
+          "key": "secondary-index",
+          "type": "DATASTORE",
+          "label": "二级索引 B+Tree",
+          "subtitle": "索引键 → 主键",
+          "description": "沿 B+Tree 定位叶子记录，得到索引列和主键列。",
+          "assetKey": "stack-storage"
+        },
+        {
+          "key": "primary-key",
+          "type": "ACTION",
+          "label": "主键值",
+          "subtitle": "回表依据",
+          "description": "InnoDB 二级索引记录包含对应行的主键列。"
+        },
+        {
+          "key": "clustered-index",
+          "type": "DATASTORE",
+          "label": "聚簇索引",
+          "subtitle": "主键 → 完整行",
+          "description": "非覆盖查询使用主键再次定位保存完整行数据的叶子页。",
+          "assetKey": "relational-database"
+        },
+        {
+          "key": "buffer-pool",
+          "type": "RUNTIME",
+          "label": "Buffer Pool",
+          "subtitle": "缓存数据页",
+          "description": "页面命中内存时直接读取；未命中才从存储载入。",
+          "assetKey": "cache"
+        },
+        {
+          "key": "result-set",
+          "type": "EXIT",
+          "label": "结果集返回",
+          "subtitle": "出口",
+          "description": "过滤和投影后，经 MySQL 协议返回应用。",
+          "assetKey": "application-server"
+        }
+      ],
+      "edges": [
+        {
+          "key": "jdbc-to-session",
+          "from": "jdbc",
+          "to": "session",
+          "type": "SYNC",
+          "label": "MySQL Protocol",
+          "sequence": 1
+        },
+        {
+          "key": "session-to-parse",
+          "from": "session",
+          "to": "parse",
+          "type": "SYNC",
+          "label": "解析",
+          "sequence": 2
+        },
+        {
+          "key": "parse-to-optimizer",
+          "from": "parse",
+          "to": "optimizer",
+          "type": "SYNC",
+          "label": "候选计划",
+          "sequence": 3
+        },
+        {
+          "key": "optimizer-to-executor",
+          "from": "optimizer",
+          "to": "executor",
+          "type": "SYNC",
+          "label": "执行计划",
+          "sequence": 4
+        },
+        {
+          "key": "executor-to-secondary-index",
+          "from": "executor",
+          "to": "secondary-index",
+          "type": "SYNC",
+          "label": "查二级索引",
+          "sequence": 5
+        },
+        {
+          "key": "secondary-index-to-primary-key",
+          "from": "secondary-index",
+          "to": "primary-key",
+          "type": "SYNC",
+          "label": "取得主键",
+          "sequence": 6
+        },
+        {
+          "key": "primary-key-to-clustered-index",
+          "from": "primary-key",
+          "to": "clustered-index",
+          "type": "SYNC",
+          "label": "回表",
+          "sequence": 7
+        },
+        {
+          "key": "clustered-index-to-buffer-pool",
+          "from": "clustered-index",
+          "to": "buffer-pool",
+          "type": "SYNC",
+          "label": "访问页面",
+          "sequence": 8
+        },
+        {
+          "key": "buffer-pool-to-result-set",
+          "from": "buffer-pool",
+          "to": "result-set",
+          "type": "RETURN",
+          "label": "结果行",
+          "sequence": 9
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "优化器选择二级索引后，叶子记录给出主键；非覆盖查询再使用主键查聚簇索引。Buffer Pool 未命中时才读取存储页。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "MySQL 8.4、InnoDB、命中二级 B+Tree 的非覆盖查询。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "覆盖索引包含查询所需列时，可以跳过聚簇索引回表。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "优化器可能选择其他索引或全表扫描，B+Tree 不是所有 SQL 的固定路径。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "Buffer Pool 未命中才触发存储页读取。",
+          "sortOrder": 102
+        },
+        {
+          "key": "branch-4",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 4",
+          "body": "长主键会放大所有二级索引记录。",
+          "sortOrder": 103
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "service-business-transaction",
+          "relation": "RELATED",
+          "label": "SQL 发起方和事务边界"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "jvm-thread-execution",
+          "relation": "RELATED",
+          "label": "同步 JDBC 等待会占用工作线程"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "http-request-panorama",
+          "relation": "RELATED",
+          "label": "数据库是全景链路的底层分支"
+        }
+      ],
+      "sources": [
+        {
+          "title": "MySQL 8.4 Clustered and Secondary Indexes",
+          "url": "https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html",
+          "accessedOn": "2026-07-25"
+        }
+      ]
+    },
+    {
+      "slug": "jvm-thread-execution",
+      "title": "JVM 线程执行",
+      "question": "Tomcat 工作线程如何在 JVM 中执行同步请求？",
+      "summary": "请求任务从 Executor 队列进入 Worker，在线程自己的 Java 栈上执行解释或 JIT 代码，并在堆上分配对象；同步和 I/O 是条件节点。",
+      "assumption": "Java 21 平台线程的同步 Servlet 请求；GC 不是每个请求的固定步骤。",
+      "domain": "jvm",
+      "domainLabel": "JVM",
+      "depthHint": 3,
+      "aliases": [],
+      "tags": [
+        "jvm"
+      ],
+      "entryNodeKey": "queue",
+      "exitNodeKeys": [
+        "complete"
+      ],
+      "layout": {
+        "diagramType": "SEQUENCE",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "queue",
+          "type": "ENTRY",
+          "label": "工作队列",
+          "subtitle": "入口",
+          "description": "请求任务等待可用 Worker；队列长度构成排队延迟。",
+          "assetKey": "message-queue",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "Q",
+            "unit": "个排队任务",
+            "visualCount": 4,
+            "note": "Q 会随并发与处理速度变化；图标表达队列中可能同时存在多个任务。"
+          }
+        },
+        {
+          "key": "worker",
+          "type": "RUNTIME",
+          "label": "Java 工作线程",
+          "subtitle": "Executor Worker",
+          "description": "取得任务并开始在当前 Java 线程上执行。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "T",
+            "unit": "个 Worker",
+            "visualCount": 4,
+            "selectedCount": 1,
+            "note": "线程池中有 T 个 Worker；高亮图标表示当前请求实际占用的 1 个线程。"
+          }
+        },
+        {
+          "key": "stack",
+          "type": "RUNTIME",
+          "label": "Java 栈与栈帧",
+          "subtitle": "线程私有",
+          "description": "保存局部变量、操作数栈、动态链接和返回信息。",
+          "assetKey": "stack-storage"
+        },
+        {
+          "key": "compiled-code",
+          "type": "COMPONENT",
+          "label": "解释器 / JIT 代码",
+          "subtitle": "字节码或机器码",
+          "description": "方法可能被解释执行，也可能运行已经编译优化的机器码。"
+        },
+        {
+          "key": "heap",
+          "type": "DATASTORE",
+          "label": "堆对象分配",
+          "subtitle": "DTO · 集合 · 业务对象",
+          "description": "请求处理中创建的对象通常在堆上分配，具体路径属于 JVM 实现。",
+          "assetKey": "object-storage"
+        },
+        {
+          "key": "sync",
+          "type": "COMPONENT",
+          "label": "同步点",
+          "subtitle": "锁 / volatile",
+          "description": "只有代码确实访问同步结构时才进入，不是每个请求固定步骤。",
+          "drillTo": "synchronized-and-jmm"
+        },
+        {
+          "key": "blocking-io",
+          "type": "RUNTIME",
+          "label": "数据库 / 网络等待",
+          "subtitle": "阻塞或 park",
+          "description": "同步 I/O 等待期间，平台线程不能处理其他请求任务。",
+          "assetKey": "relational-database"
+        },
+        {
+          "key": "unwind",
+          "type": "ACTION",
+          "label": "返回与栈帧退出",
+          "subtitle": "结果 / 异常",
+          "description": "结果或异常沿调用栈返回，栈帧依次退出。"
+        },
+        {
+          "key": "complete",
+          "type": "EXIT",
+          "label": "线程归还池",
+          "subtitle": "出口",
+          "description": "Worker 结束当前任务，继续从队列取得下一个任务。",
+          "assetKey": "multi-instance-server"
+        }
+      ],
+      "edges": [
+        {
+          "key": "queue-to-worker",
+          "from": "queue",
+          "to": "worker",
+          "type": "SYNC",
+          "label": "Worker 取任务",
+          "sequence": 1
+        },
+        {
+          "key": "worker-to-stack",
+          "from": "worker",
+          "to": "stack",
+          "type": "SYNC",
+          "label": "方法调用",
+          "sequence": 2
+        },
+        {
+          "key": "stack-to-compiled-code",
+          "from": "stack",
+          "to": "compiled-code",
+          "type": "SYNC",
+          "label": "执行",
+          "sequence": 3
+        },
+        {
+          "key": "compiled-code-to-heap",
+          "from": "compiled-code",
+          "to": "heap",
+          "type": "SYNC",
+          "label": "创建对象",
+          "sequence": 4
+        },
+        {
+          "key": "heap-to-sync",
+          "from": "heap",
+          "to": "sync",
+          "type": "SYNC",
+          "label": "需要时同步",
+          "sequence": 5
+        },
+        {
+          "key": "sync-to-blocking-io",
+          "from": "sync",
+          "to": "blocking-io",
+          "type": "SYNC",
+          "label": "继续",
+          "sequence": 6
+        },
+        {
+          "key": "blocking-io-to-unwind",
+          "from": "blocking-io",
+          "to": "unwind",
+          "type": "SYNC",
+          "label": "I/O 完成",
+          "sequence": 7
+        },
+        {
+          "key": "unwind-to-complete",
+          "from": "unwind",
+          "to": "complete",
+          "type": "RETURN",
+          "label": "任务结束",
+          "sequence": 8
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "请求任务从 Executor 队列进入 Worker，在线程自己的 Java 栈上执行解释或 JIT 代码，并在堆上分配对象；同步和 I/O 是条件节点。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "Java 21 平台线程的同步 Servlet 请求；GC 不是每个请求的固定步骤。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "队列满或达到线程上限时，需要拒绝、背压或上游限流。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "GC 与 safepoint 是运行时事件，不是每个请求固定步骤。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "未捕获异常由容器边界处理，Worker 通常继续服务后续任务。",
+          "sortOrder": 102
+        },
+        {
+          "key": "branch-4",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 4",
+          "body": "虚拟线程的挂载与卸载需要单独版本页。",
+          "sortOrder": 103
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "spring-web-request-chain",
+          "relation": "RELATED",
+          "label": "请求任务的框架级调用路径"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "service-business-transaction",
+          "relation": "RELATED",
+          "label": "线程绑定事务发生在本运行时上下文"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "synchronized-and-jmm",
+          "relation": "RELATED",
+          "label": "同步点的下一层原理"
+        }
+      ]
+    },
+    {
+      "slug": "synchronized-and-jmm",
+      "title": "synchronized 与 JMM",
+      "question": "进入和退出临界区时，互斥与可见性如何建立？",
+      "summary": "线程获取同一 monitor 后进入临界区，退出时释放；unlock happens-before 后续对同一 monitor 的 lock。",
+      "assumption": "以 Java 语言与 JVM 规范为真相；对象头、快路径和 park 属于 HotSpot 版本实现。",
+      "domain": "java-concurrency",
+      "domainLabel": "Java Concurrency",
+      "depthHint": 4,
+      "aliases": [],
+      "tags": [
+        "java-concurrency"
+      ],
+      "entryNodeKey": "entry",
+      "exitNodeKeys": [
+        "exit"
+      ],
+      "layout": {
+        "diagramType": "SEQUENCE",
+        "direction": "RIGHT",
+        "engine": "ELK",
+        "nodeSpacing": 40,
+        "layerSpacing": 100,
+        "viewportMode": "FIT_VIEWPORT",
+        "maxColumns": 4
+      },
+      "nodes": [
+        {
+          "key": "entry",
+          "type": "ENTRY",
+          "label": "到达同步点",
+          "subtitle": "入口",
+          "description": "求值锁对象，或确定 synchronized 方法对应的 monitor。",
+          "assetKey": "multi-instance-server"
+        },
+        {
+          "key": "acquire",
+          "type": "COMPONENT",
+          "label": "尝试获取 monitor",
+          "subtitle": "互斥入口",
+          "description": "同一时刻只有持有者可以进入受该 monitor 保护的临界区。",
+          "assetKey": "auth-iam"
+        },
+        {
+          "key": "contention",
+          "type": "RUNTIME",
+          "label": "无竞争 / 发生竞争",
+          "subtitle": "等待策略是实现细节",
+          "description": "竞争线程需要等待；JVM 实现可选择自旋、阻塞或 park。",
+          "assetKey": "multi-instance-server",
+          "multiplicity": {
+            "mode": "DYNAMIC",
+            "value": "K",
+            "unit": "个竞争线程",
+            "visualCount": 4,
+            "selectedCount": 1,
+            "note": "K 表示同一 monitor 上的动态竞争线程数；高亮线程最终获得 monitor。"
+          }
+        },
+        {
+          "key": "critical",
+          "type": "ACTION",
+          "label": "执行临界区",
+          "subtitle": "持有 monitor",
+          "description": "持有者执行受保护代码；synchronized 对同一线程可重入。",
+          "multiplicity": {
+            "mode": "EXACT",
+            "value": "1",
+            "unit": "个持有线程",
+            "visualCount": 1,
+            "selectedCount": 1,
+            "note": "对同一个 monitor，同一时刻只有 1 个线程持有并执行受保护临界区。"
+          }
+        },
+        {
+          "key": "shared-state",
+          "type": "DATASTORE",
+          "label": "共享状态",
+          "subtitle": "一致同步协议",
+          "description": "其他线程的相关访问也必须遵守同一同步协议，否则仍可能数据竞争。",
+          "assetKey": "cache"
+        },
+        {
+          "key": "release",
+          "type": "COMPONENT",
+          "label": "释放 monitor",
+          "subtitle": "正常或异常退出",
+          "description": "同步块正常完成或抛出异常时都必须释放 monitor。",
+          "assetKey": "auth-iam"
+        },
+        {
+          "key": "happens-before",
+          "type": "ACTION",
+          "label": "建立 happens-before",
+          "subtitle": "可见性保证",
+          "description": "对同一 monitor 的 unlock happens-before 后续的 lock。"
+        },
+        {
+          "key": "exit",
+          "type": "EXIT",
+          "label": "后继线程继续",
+          "subtitle": "出口",
+          "description": "当前线程继续执行，等待者获得后续竞争机会。",
+          "assetKey": "multi-instance-server"
+        }
+      ],
+      "edges": [
+        {
+          "key": "entry-to-acquire",
+          "from": "entry",
+          "to": "acquire",
+          "type": "SYNC",
+          "label": "请求 monitor",
+          "sequence": 1
+        },
+        {
+          "key": "acquire-to-contention",
+          "from": "acquire",
+          "to": "contention",
+          "type": "SYNC",
+          "label": "竞争判断",
+          "sequence": 2
+        },
+        {
+          "key": "contention-to-critical",
+          "from": "contention",
+          "to": "critical",
+          "type": "SYNC",
+          "label": "获取成功",
+          "sequence": 3
+        },
+        {
+          "key": "critical-to-shared-state",
+          "from": "critical",
+          "to": "shared-state",
+          "type": "SYNC",
+          "label": "读写状态",
+          "sequence": 4
+        },
+        {
+          "key": "shared-state-to-release",
+          "from": "shared-state",
+          "to": "release",
+          "type": "SYNC",
+          "label": "退出",
+          "sequence": 5
+        },
+        {
+          "key": "release-to-happens-before",
+          "from": "release",
+          "to": "happens-before",
+          "type": "SYNC",
+          "label": "内存顺序",
+          "sequence": 6
+        },
+        {
+          "key": "happens-before-to-exit",
+          "from": "happens-before",
+          "to": "exit",
+          "type": "RETURN",
+          "label": "唤醒竞争",
+          "sequence": 7
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "主链路",
+          "body": "线程获取同一 monitor 后进入临界区，退出时释放；unlock happens-before 后续对同一 monitor 的 lock。",
+          "sortOrder": 10
+        },
+        {
+          "key": "scenario-assumption",
+          "kind": "PREREQUISITE",
+          "anchorType": "PAGE",
+          "title": "场景假设",
+          "body": "以 Java 语言与 JVM 规范为真相；对象头、快路径和 park 属于 HotSpot 版本实现。",
+          "sortOrder": 20
+        },
+        {
+          "key": "branch-1",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 1",
+          "body": "同步块通常使用 monitorenter/monitorexit，同步方法由 ACC_SYNCHRONIZED 表达。",
+          "sortOrder": 100
+        },
+        {
+          "key": "branch-2",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 2",
+          "body": "获取锁不会阻止其他线程进行未同步访问。",
+          "sortOrder": 101
+        },
+        {
+          "key": "branch-3",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 3",
+          "body": "wait 会释放 monitor，sleep 不会释放 monitor。",
+          "sortOrder": 102
+        },
+        {
+          "key": "branch-4",
+          "kind": "BRANCH",
+          "anchorType": "PAGE",
+          "title": "异常 / 变体 4",
+          "body": "偏向锁、锁升级与对象头布局不是 Java 语义保证。",
+          "sortOrder": 103
+        }
+      ],
+      "references": [
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "jvm-thread-execution",
+          "relation": "RELATED",
+          "label": "同步点所在的请求运行时路径"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "spring-web-request-chain",
+          "relation": "RELATED",
+          "label": "共享 Bean 可能被多个请求线程并发调用"
+        },
+        {
+          "sourceAnchorType": "PAGE",
+          "targetPage": "service-business-transaction",
+          "relation": "RELATED",
+          "label": "事务互斥与 Java monitor 不是同一机制"
+        }
+      ],
+      "sources": [
+        {
+          "title": "JLS 17.4.5 Happens-before Order",
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html#jls-17.4.5",
+          "accessedOn": "2026-07-25"
+        }
+      ]
+    }
+  ]
+}

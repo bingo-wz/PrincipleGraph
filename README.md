@@ -10,7 +10,7 @@ PrincipleGraph 用可下钻、可双链的结构化图谱，解释一个系统�
 
 **公开 Demo：** [principlegraph-m0.bingoyy.chatgpt.site](https://principlegraph-m0.bingoyy.chatgpt.site)
 
-> 当前阶段：M0 可点击原型与内容模型验证。欢迎 Java 技术审核、交互反馈和首批贡献者。
+> 当前阶段：M1 数据驱动内容引擎。欢迎 Java 技术审核、交互反馈和首批内容贡献者。
 
 ## 为什么做 PrincipleGraph
 
@@ -34,6 +34,7 @@ PrincipleGraph 把“知识页”作为一个稳定抽象层级：一页只解�
 - 页面与节点搜索、异常/变体说明；
 - Content Schema v1、有效/无效 fixture 和图语义自动校验；
 - 生产构建、服务端渲染、交互结构与 ESLint 自动检查。
+- 仓库 Content Pack 作为唯一内容事实源，页面、素材、导航、搜索和统计均由数据生成。
 
 ## 快速开始
 
@@ -68,6 +69,7 @@ npm test
 - [首批 8 个知识页内容大纲](docs/m0/content-outline.md)
 - [低保真原型 Brief](docs/m0/prototype-brief.md)
 - [系统设计素材库](docs/m0/asset-library.md)
+- [M1 数据驱动内容引擎](docs/m1/content-pack-engine.md)
 - [5 人可用性测试脚本](docs/m0/usability-test.md)
 - [可用性测试记录表](docs/m0/usability-results.csv)
 - [技术审核签字表](docs/m0/technical-review.md)
@@ -82,7 +84,7 @@ PrincipleGraph/
 ├── contexts/                 # 项目愿景与稳定上下文
 ├── docs/                     # 五阶段规划、M0 设计与 ADR
 ├── packages/content-schema/  # Content Schema 与校验 fixture
-└── prototype/                # 可运行的 M0 Web 原型
+└── prototype/                # M1 Web 原型与 content/packs 内容包
 ```
 
 ## 设计原则

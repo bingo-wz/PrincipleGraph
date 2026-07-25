@@ -39,6 +39,8 @@ test("服务端渲染 PrincipleGraph 首层链路", async () => {
   assert.match(html, /个 Java 实例/);
   assert.match(html, /素材库/);
   assert.match(html, /软件架构图/);
+  assert.match(html, /Content Pack v(?:<!-- -->)?1\.0\.0/);
+  assert.match(html, /数据驱动/);
   assert.match(html, /下一层原理/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
   assert.doesNotMatch(html, /react-loading-skeleton/);
@@ -51,6 +53,8 @@ test("原型保留核心交互与可访问性结构", async () => {
     css,
     packageJson,
     graphData,
+    contentEngine,
+    contentPack,
     assetLibrary,
     diagramRenderers,
   ] = await Promise.all([
@@ -59,6 +63,14 @@ test("原型保留核心交互与可访问性结构", async () => {
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/graph-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/content-engine.ts", import.meta.url), "utf8"),
+    readFile(
+      new URL(
+        "../content/packs/java-http-request.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
     readFile(new URL("../app/asset-library.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/diagram-renderers.tsx", import.meta.url), "utf8"),
   ]);
@@ -89,19 +101,28 @@ test("原型保留核心交互与可访问性结构", async () => {
   assert.match(css, /\.data-flow-renderer/);
   assert.match(css, /\.asset-library-panel/);
   assert.match(css, /\.glyph-database/);
-  assert.match(graphData, /synchronized-and-jmm/);
   assert.match(graphData, /multiplicity/);
   assert.match(graphData, /diagramType/);
   assert.match(graphData, /SOFTWARE_ARCHITECTURE/);
   assert.match(graphData, /SEQUENCE/);
   assert.match(graphData, /LOGICAL_DATA_FLOW/);
   assert.match(graphData, /assetKey/);
-  assert.match(graphData, /个 Java 实例/);
-  assert.match(graphData, /个 Worker/);
-  assert.match(assetLibrary, /系统设计素材库|assetCatalog/);
-  assert.match(assetLibrary, /Web Application/);
-  assert.match(assetLibrary, /Relational Database/);
-  assert.match(assetLibrary, /Auth & IAM/);
+  assert.match(graphData, /activeContentRuntime\.pack\.pages\.map/);
+  assert.doesNotMatch(graphData, /一次 HTTP 请求全景/);
+  assert.match(contentEngine, /createContentPackRuntime/);
+  assert.match(contentEngine, /java-http-request\.json/);
+  assert.match(contentPack, /synchronized-and-jmm/);
+  assert.match(contentPack, /个 Java 实例/);
+  assert.match(contentPack, /个 Worker/);
+  assert.match(contentPack, /"packVersion": "1\.0\.0"/);
+  assert.match(contentPack, /"status": "PUBLISHED"/);
+  assert.match(contentPack, /"diagramType": "SOFTWARE_ARCHITECTURE"/);
+  assert.match(contentPack, /"diagramType": "SEQUENCE"/);
+  assert.match(contentPack, /"diagramType": "LOGICAL_DATA_FLOW"/);
+  assert.match(assetLibrary, /activeContentRuntime\.pack\.assetLibrary/);
+  assert.match(contentPack, /Web Application/);
+  assert.match(contentPack, /Relational Database/);
+  assert.match(contentPack, /Auth & IAM/);
   assert.match(diagramRenderers, /ArchitectureRenderer/);
   assert.match(diagramRenderers, /SequenceRenderer/);
   assert.match(diagramRenderers, /LogicalDataFlowRenderer/);

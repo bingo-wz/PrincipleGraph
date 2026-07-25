@@ -9,6 +9,7 @@ const schemaRoot = path.resolve(
   currentDir,
   "../../packages/content-schema",
 );
+const contentPackRoot = path.resolve(currentDir, "../content/packs");
 
 const readJson = (relativePath) =>
   JSON.parse(fs.readFileSync(path.join(schemaRoot, relativePath), "utf8"));
@@ -142,6 +143,63 @@ function validateSemantics(pack) {
           `REFERENCE_TARGET_NOT_FOUND:${page.slug}:${reference.targetPage}`,
         );
       }
+      if (
+        reference.sourceAnchorType === "NODE" &&
+        !nodeKeys.has(reference.sourceAnchorKey)
+      ) {
+        violations.push(
+          `REFERENCE_SOURCE_NODE_NOT_FOUND:${page.slug}:${reference.sourceAnchorKey}`,
+        );
+      }
+      if (
+        reference.sourceAnchorType === "EDGE" &&
+        !edgeKeys.has(reference.sourceAnchorKey)
+      ) {
+        violations.push(
+          `REFERENCE_SOURCE_EDGE_NOT_FOUND:${page.slug}:${reference.sourceAnchorKey}`,
+        );
+      }
+      const targetPage = pageBySlug.get(reference.targetPage);
+      if (
+        reference.targetAnchorKey &&
+        targetPage &&
+        !targetPage.nodes.some(
+          (node) => node.key === reference.targetAnchorKey,
+        ) &&
+        !targetPage.edges.some(
+          (edge) => edge.key === reference.targetAnchorKey,
+        )
+      ) {
+        violations.push(
+          `REFERENCE_TARGET_ANCHOR_NOT_FOUND:${page.slug}:${reference.targetPage}:${reference.targetAnchorKey}`,
+        );
+      }
+    }
+
+    const explanationKeys = new Set();
+    for (const explanation of page.explanations) {
+      if (explanationKeys.has(explanation.key)) {
+        violations.push(
+          `DUPLICATE_EXPLANATION:${page.slug}:${explanation.key}`,
+        );
+      }
+      explanationKeys.add(explanation.key);
+      if (
+        explanation.anchorType === "NODE" &&
+        !nodeKeys.has(explanation.anchorKey)
+      ) {
+        violations.push(
+          `EXPLANATION_NODE_NOT_FOUND:${page.slug}:${explanation.anchorKey}`,
+        );
+      }
+      if (
+        explanation.anchorType === "EDGE" &&
+        !edgeKeys.has(explanation.anchorKey)
+      ) {
+        violations.push(
+          `EXPLANATION_EDGE_NOT_FOUND:${page.slug}:${explanation.anchorKey}`,
+        );
+      }
     }
   }
 
@@ -181,6 +239,37 @@ function validateSemantics(pack) {
   return violations;
 }
 
+function validatePublishablePack(pack) {
+  const violations = [];
+
+  if (!pack.packVersion) violations.push("PACK_VERSION_REQUIRED");
+  if (!pack.status) violations.push("PACK_STATUS_REQUIRED");
+  if (!pack.updatedAt) violations.push("PACK_UPDATED_AT_REQUIRED");
+  if (!pack.authors?.length) violations.push("PACK_AUTHORS_REQUIRED");
+
+  for (const page of pack.pages) {
+    if (!page.question) {
+      violations.push(`PAGE_QUESTION_REQUIRED:${page.slug}`);
+    }
+    if (!page.assumption) {
+      violations.push(`PAGE_ASSUMPTION_REQUIRED:${page.slug}`);
+    }
+    if (!page.layout?.diagramType) {
+      violations.push(`PAGE_DIAGRAM_TYPE_REQUIRED:${page.slug}`);
+    }
+    const mainFlowCount = page.explanations.filter(
+      (explanation) => explanation.kind === "MAIN_FLOW",
+    ).length;
+    if (mainFlowCount !== 1) {
+      violations.push(
+        `MAIN_FLOW_EXPLANATION_COUNT:${page.slug}:${mainFlowCount}`,
+      );
+    }
+  }
+
+  return violations;
+}
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -193,6 +282,32 @@ assert(
   validateSemantics(validFixture).length === 0,
   `有效 fixture 未通过语义校验：${validateSemantics(validFixture).join(", ")}`,
 );
+
+const contentPackFiles = fs
+  .readdirSync(contentPackRoot)
+  .filter((fileName) => fileName.endsWith(".json"))
+  .sort();
+assert(contentPackFiles.length > 0, "content/packs 中至少需要一个内容包");
+
+for (const fileName of contentPackFiles) {
+  const pack = JSON.parse(
+    fs.readFileSync(path.join(contentPackRoot, fileName), "utf8"),
+  );
+  assert(
+    validateSchema(pack),
+    `${fileName} 未通过 Schema：${JSON.stringify(validateSchema.errors)}`,
+  );
+  const semanticViolations = validateSemantics(pack);
+  assert(
+    semanticViolations.length === 0,
+    `${fileName} 未通过语义校验：${semanticViolations.join(", ")}`,
+  );
+  const publishViolations = validatePublishablePack(pack);
+  assert(
+    publishViolations.length === 0,
+    `${fileName} 不满足发布要求：${publishViolations.join(", ")}`,
+  );
+}
 
 assert(
   !validateSchema(invalidSchemaFixture),
@@ -232,6 +347,9 @@ assert(
 );
 
 console.log("Content Schema v1：有效 fixture 通过");
+console.log(
+  `Content Pack：${contentPackFiles.length} 个仓库内容包通过发布校验`,
+);
 console.log("Schema 反例：已正确拒绝");
 console.log("图型反例：已正确拒绝");
 console.log("素材引用反例：已正确拒绝");

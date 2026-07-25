@@ -14,6 +14,7 @@ import {
   diagramTypeLabels,
 } from "./diagram-renderers";
 import {
+  contentPackManifest,
   graphPages,
   incomingReferences,
   pagesBySlug,
@@ -48,11 +49,17 @@ const supportedDiagramTypes: DiagramType[] = [
 ];
 
 const assetCategories = Object.keys(assetCategoryLabels) as AssetCategory[];
+const initialPage =
+  pagesBySlug.get(contentPackManifest.entryPage) ?? graphPages[0];
+const initialSlug = initialPage?.slug ?? "";
+const initialNodeKey = initialPage?.nodes[0]?.key ?? null;
 
 export default function Home() {
-  const [currentSlug, setCurrentSlug] = useState("http-request-panorama");
-  const [trail, setTrail] = useState<string[]>(["http-request-panorama"]);
-  const [selectedKey, setSelectedKey] = useState<string | null>("browser");
+  const [currentSlug, setCurrentSlug] = useState(initialSlug);
+  const [trail, setTrail] = useState<string[]>([initialSlug]);
+  const [selectedKey, setSelectedKey] = useState<string | null>(
+    initialNodeKey,
+  );
   const [origin, setOrigin] = useState<Origin | null>(null);
   const [query, setQuery] = useState("");
   const [zoom, setZoom] = useState(1);
@@ -82,7 +89,7 @@ export default function Home() {
 
     return graphPages
       .flatMap((candidate) => {
-        const pageMatched = `${candidate.title} ${candidate.domain} ${candidate.question}`
+        const pageMatched = `${candidate.title} ${candidate.domain} ${candidate.question} ${candidate.aliases.join(" ")} ${candidate.tags.join(" ")}`
           .toLocaleLowerCase()
           .includes(normalized);
         const nodeMatches = candidate.nodes.filter((node) =>
@@ -218,8 +225,8 @@ export default function Home() {
       <header className="topbar">
         <button
           className="brand"
-          onClick={() => openDirect("http-request-panorama")}
-          aria-label="返回 HTTP 请求全景"
+          onClick={() => openDirect(initialSlug)}
+          aria-label={`返回 ${initialPage?.title ?? "入口知识页"}`}
         >
           <span className="brand-mark">P</span>
           <span>
@@ -276,7 +283,7 @@ export default function Home() {
           </button>
           <div className="top-status">
             <span className="status-dot" />
-            <span>多图型样板 v0.2</span>
+            <span>Content Pack v{contentPackManifest.version}</span>
           </div>
         </div>
       </header>
@@ -284,7 +291,7 @@ export default function Home() {
       <aside className="sidebar">
         <div className="sidebar-heading">
           <span>知识主干</span>
-          <small>8 层级页</small>
+          <small>{contentPackManifest.pages} 个知识页</small>
         </div>
         <nav aria-label="知识页">
           {graphPages.map((candidate, index) => {
@@ -310,8 +317,10 @@ export default function Home() {
         </nav>
         <div className="sidebar-note">
           <span>当前样板</span>
-          <strong>72 个主节点</strong>
-          <small>每页一条完整主链路</small>
+          <strong>{contentPackManifest.nodes} 个主节点</strong>
+          <small>
+            {contentPackManifest.edges} 条流程边 · 数据驱动
+          </small>
         </div>
       </aside>
 
