@@ -1,6 +1,6 @@
 {
   "name": "principlegraph",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "用可下钻、可双链的结构化图谱解释任意系统与专业知识的底层原理。",
   "scripts": {
