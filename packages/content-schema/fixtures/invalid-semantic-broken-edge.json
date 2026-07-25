@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "space": {
+    "key": "java-backend",
+    "name": "Java 后端原理图谱",
+    "type": "PUBLIC_LIBRARY"
+  },
+  "scenarios": [
+    {
+      "key": "broken-demo",
+      "title": "损坏链路示例",
+      "summary": "该 fixture 应通过 JSON Schema，但被图语义校验拒绝。",
+      "type": "LEARNING",
+      "entryPage": "broken-page",
+      "sortOrder": 1
+    }
+  ],
+  "pages": [
+    {
+      "slug": "broken-page",
+      "title": "损坏页面",
+      "summary": "边的目标节点不存在，出口也不可达。",
+      "domain": "testing",
+      "entryNodeKey": "entry",
+      "exitNodeKeys": ["exit"],
+      "nodes": [
+        {
+          "key": "entry",
+          "type": "ENTRY",
+          "label": "入口",
+          "description": "语义校验的入口节点。"
+        },
+        {
+          "key": "exit",
+          "type": "EXIT",
+          "label": "出口",
+          "description": "无法从入口到达的出口节点。"
+        }
+      ],
+      "edges": [
+        {
+          "key": "broken-edge",
+          "from": "entry",
+          "to": "missing-node",
+          "type": "SYNC",
+          "sequence": 1
+        }
+      ],
+      "explanations": [
+        {
+          "key": "main-flow",
+          "kind": "MAIN_FLOW",
+          "anchorType": "PAGE",
+          "title": "损坏主链路",
+          "body": "这段说明故意配合一个端点不存在的流程边。"
+        }
+      ]
+    }
+  ]
+}

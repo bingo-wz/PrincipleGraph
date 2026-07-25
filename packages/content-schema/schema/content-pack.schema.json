@@ -1,0 +1,519 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://principlegraph.dev/schemas/content-pack-v1.json",
+  "title": "PrincipleGraph Content Pack v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "space", "scenarios", "pages"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "space": {
+      "$ref": "#/$defs/space"
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/scenario"
+      }
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/page"
+      }
+    }
+  },
+  "$defs": {
+    "stableKey": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 160,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "space": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "name", "type"],
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "type": {
+          "enum": ["PUBLIC_LIBRARY", "PROJECT"]
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "title",
+        "summary",
+        "type",
+        "entryPage",
+        "sortOrder"
+      ],
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 500
+        },
+        "type": {
+          "enum": ["LEARNING", "BUSINESS", "INCIDENT"]
+        },
+        "entryPage": {
+          "$ref": "#/$defs/slug"
+        },
+        "sortOrder": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "context": {
+          "type": "object",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "title",
+        "summary",
+        "domain",
+        "entryNodeKey",
+        "exitNodeKeys",
+        "nodes",
+        "edges",
+        "explanations"
+      ],
+      "properties": {
+        "slug": {
+          "$ref": "#/$defs/slug"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 500
+        },
+        "domain": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "depthHint": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableKey"
+          }
+        },
+        "entryNodeKey": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "exitNodeKeys": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableKey"
+          }
+        },
+        "layout": {
+          "$ref": "#/$defs/layout"
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 200,
+          "items": {
+            "$ref": "#/$defs/node"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 400,
+          "items": {
+            "$ref": "#/$defs/edge"
+          }
+        },
+        "explanations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/explanation"
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["direction"],
+      "properties": {
+        "direction": {
+          "enum": ["RIGHT", "DOWN"]
+        },
+        "engine": {
+          "enum": ["MANUAL", "ELK"]
+        },
+        "nodeSpacing": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 240
+        },
+        "layerSpacing": {
+          "type": "number",
+          "minimum": 24,
+          "maximum": 400
+        },
+        "viewportMode": {
+          "enum": ["FIT_VIEWPORT", "FREE_CANVAS"]
+        },
+        "maxColumns": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 8
+        }
+      }
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": -100000,
+          "maximum": 100000
+        },
+        "y": {
+          "type": "number",
+          "minimum": -100000,
+          "maximum": 100000
+        }
+      }
+    },
+    "multiplicity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "value", "unit", "visualCount", "note"],
+      "properties": {
+        "mode": {
+          "enum": ["EXACT", "EXAMPLE", "DYNAMIC"]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "visualCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "selectedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "note": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 500
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "type", "label", "description"],
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "type": {
+          "enum": [
+            "ENTRY",
+            "EXIT",
+            "COMPONENT",
+            "ACTION",
+            "DATASTORE",
+            "GROUP",
+            "NOTE"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "description": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 1200
+        },
+        "multiplicity": {
+          "$ref": "#/$defs/multiplicity"
+        },
+        "position": {
+          "$ref": "#/$defs/position"
+        },
+        "parentKey": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "drillTo": {
+          "$ref": "#/$defs/slug"
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableKey"
+          }
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "from", "to", "type"],
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "from": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "to": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "type": {
+          "enum": ["SYNC", "ASYNC", "DATA", "ERROR", "RETURN"]
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "condition": {
+          "type": "string",
+          "maxLength": 240
+        }
+      }
+    },
+    "explanation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "kind", "anchorType", "title", "body"],
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "kind": {
+          "enum": [
+            "OVERVIEW",
+            "MAIN_FLOW",
+            "BRANCH",
+            "ERROR",
+            "PREREQUISITE",
+            "VERSION_NOTE"
+          ]
+        },
+        "anchorType": {
+          "enum": ["PAGE", "NODE", "EDGE"]
+        },
+        "anchorKey": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 20000
+        },
+        "sortOrder": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "anchorType": {
+                "enum": ["NODE", "EDGE"]
+              }
+            },
+            "required": ["anchorType"]
+          },
+          "then": {
+            "required": ["anchorKey"],
+            "properties": {
+              "anchorKey": {
+                "$ref": "#/$defs/stableKey"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceAnchorType", "targetPage", "relation"],
+      "properties": {
+        "sourceAnchorType": {
+          "enum": ["PAGE", "NODE", "EDGE"]
+        },
+        "sourceAnchorKey": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "targetPage": {
+          "$ref": "#/$defs/slug"
+        },
+        "targetAnchorKey": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "relation": {
+          "enum": [
+            "RELATED",
+            "DEPENDS_ON",
+            "CONTRASTS",
+            "USED_BY",
+            "PREREQUISITE"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 160
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sourceAnchorType": {
+                "enum": ["NODE", "EDGE"]
+              }
+            },
+            "required": ["sourceAnchorType"]
+          },
+          "then": {
+            "required": ["sourceAnchorKey"],
+            "properties": {
+              "sourceAnchorKey": {
+                "$ref": "#/$defs/stableKey"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "url", "accessedOn"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 240
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "accessedOn": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    }
+  }
+}

@@ -22,6 +22,141 @@ const kindLabel: Record<GraphNode["kind"], string> = {
   runtime: "运行时",
 };
 
+const multiplicityModeLabel = {
+  exact: "固定数量",
+  example: "示意数量",
+  dynamic: "动态数量",
+} as const;
+
+type FlowMapProps = {
+  nodes: GraphNode[];
+  columns: number;
+  selectedKey: string | null;
+  onSelect: (node: GraphNode) => void;
+  onDrill: (slug: string) => void;
+  className: string;
+};
+
+function FlowMap({
+  nodes,
+  columns,
+  selectedKey,
+  onSelect,
+  onDrill,
+  className,
+}: FlowMapProps) {
+  const rows = Array.from(
+    { length: Math.ceil(nodes.length / columns) },
+    (_, rowIndex) =>
+      nodes
+        .slice(rowIndex * columns, (rowIndex + 1) * columns)
+        .map((node, offset) => ({
+          node,
+          index: rowIndex * columns + offset,
+        })),
+  );
+
+  return (
+    <div
+      className={`flow-map ${className}`}
+      aria-label={`执行链路，共 ${nodes.length} 个步骤`}
+    >
+      {rows.map((row, rowIndex) => {
+        const reverse = rowIndex % 2 === 1;
+        const turn = row[row.length - 1];
+
+        return (
+          <div className="flow-row-group" key={`row-${rowIndex}`}>
+            <div className={`flow-row${reverse ? " reverse" : ""}`}>
+              {row.map(({ node, index }, offset) => {
+                const active = node.key === selectedKey;
+                return (
+                  <div className="flow-step" key={node.key}>
+                    <button
+                      className={`graph-node kind-${node.kind}${active ? " selected" : ""}`}
+                      onClick={() => onSelect(node)}
+                      onDoubleClick={() => node.drillTo && onDrill(node.drillTo)}
+                      aria-label={`${node.label}${node.multiplicity ? `，${node.multiplicity.value}${node.multiplicity.unit}` : ""}`}
+                      aria-pressed={active}
+                    >
+                      <span className="node-kind">{kindLabel[node.kind]}</span>
+                      <strong>{node.label}</strong>
+                      <small>{node.description}</small>
+                      {node.multiplicity && (
+                        <span
+                          className={`multiplicity multiplicity-${node.multiplicity.mode}`}
+                          title={node.multiplicity.note}
+                        >
+                          <span className="replica-icons" aria-hidden="true">
+                            {Array.from({
+                              length: node.multiplicity.visualCount,
+                            }).map((_, iconIndex) => (
+                              <i
+                                className={
+                                  iconIndex <
+                                  (node.multiplicity?.selectedCount ?? 0)
+                                    ? "active"
+                                    : ""
+                                }
+                                key={iconIndex}
+                              />
+                            ))}
+                          </span>
+                          <span className="multiplicity-copy">
+                            <b>{node.multiplicity.value}</b>
+                            {node.multiplicity.unit}
+                          </span>
+                        </span>
+                      )}
+                      {node.drillTo && (
+                        <span
+                          className="drill-affordance"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onDrill(node.drillTo!);
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              onDrill(node.drillTo!);
+                            }
+                          }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          进入原理 ↘
+                        </span>
+                      )}
+                    </button>
+                    {offset < row.length - 1 && (
+                      <div className="flow-edge" aria-hidden="true">
+                        <span>{index + 1}</span>
+                        <i />
+                        <small>{node.edgeLabel ?? "继续"}</small>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {rowIndex < rows.length - 1 && turn && (
+              <div
+                className={`flow-turn ${reverse ? "turn-left" : "turn-right"}`}
+                aria-hidden="true"
+              >
+                <span>{turn.index + 1}</span>
+                <small>{turn.node.edgeLabel ?? "继续"}</small>
+                <i />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Home() {
   const [currentSlug, setCurrentSlug] = useState("http-request-panorama");
   const [trail, setTrail] = useState<string[]>(["http-request-panorama"]);
@@ -265,59 +400,31 @@ export default function Home() {
           </button>
         )}
 
-        <div className="canvas-viewport">
+        <div
+          className={`canvas-viewport${zoom > 1 ? " zoomed" : ""}`}
+        >
           <div className="paper-grid" />
           <div
             className="flow-canvas"
             key={page.slug}
             style={{ transform: `scale(${zoom})` }}
           >
-            <div className="flow-strip">
-              {page.nodes.map((node, index) => {
-                const active = node.key === selectedKey;
-                return (
-                  <div className="flow-step" key={node.key}>
-                    <button
-                      className={`graph-node kind-${node.kind}${active ? " selected" : ""}`}
-                      onClick={() => selectNode(node)}
-                      onDoubleClick={() => node.drillTo && drill(node.drillTo)}
-                      aria-pressed={active}
-                    >
-                      <span className="node-kind">{kindLabel[node.kind]}</span>
-                      <strong>{node.label}</strong>
-                      <small>{node.description}</small>
-                      {node.drillTo && (
-                        <span
-                          className="drill-affordance"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            drill(node.drillTo!);
-                          }}
-                          role="button"
-                          tabIndex={0}
-                        >
-                          进入原理 ↘
-                        </span>
-                      )}
-                    </button>
-                    {index < page.nodes.length - 1 && (
-                      <div
-                        className={
-                          node.kind === "exit"
-                            ? "flow-edge return-edge"
-                            : "flow-edge"
-                        }
-                        aria-hidden="true"
-                      >
-                        <span>{index + 1}</span>
-                        <i />
-                        <small>{node.edgeLabel ?? "继续"}</small>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <FlowMap
+              nodes={page.nodes}
+              columns={4}
+              selectedKey={selectedKey}
+              onSelect={selectNode}
+              onDrill={drill}
+              className="flow-map-desktop"
+            />
+            <FlowMap
+              nodes={page.nodes}
+              columns={2}
+              selectedKey={selectedKey}
+              onSelect={selectNode}
+              onDrill={drill}
+              className="flow-map-compact"
+            />
 
             <div className="branch-lane">
               <span className="branch-label">异常 / 变体</span>
@@ -350,7 +457,7 @@ export default function Home() {
             +
           </button>
           <i />
-          <button onClick={() => setZoom(1)}>适配主链路</button>
+          <button onClick={() => setZoom(1)}>适配整页</button>
           <button onClick={() => setLegendOpen((value) => !value)}>
             图例 {legendOpen ? "×" : "?"}
           </button>
@@ -364,6 +471,14 @@ export default function Home() {
               </span>
               <span>
                 <i className="legend-error" /> 异常 / 变体
+              </span>
+              <span>
+                <i className="legend-multiplicity">
+                  <b />
+                  <b />
+                  <b />
+                </i>
+                数量 / 当前落点
               </span>
               <span>
                 ↔ 双向引用
@@ -384,6 +499,19 @@ export default function Home() {
             </div>
             <h2>{selectedNode.label}</h2>
             <p className="lead">{selectedNode.detail}</p>
+
+            {selectedNode.multiplicity && (
+              <div className="quantity-detail">
+                <span>
+                  {multiplicityModeLabel[selectedNode.multiplicity.mode]}
+                </span>
+                <strong>
+                  {selectedNode.multiplicity.value}
+                  {selectedNode.multiplicity.unit}
+                </strong>
+                <p>{selectedNode.multiplicity.note}</p>
+              </div>
+            )}
 
             <dl className="neighbors">
               <div>

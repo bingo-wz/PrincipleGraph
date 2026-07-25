@@ -487,9 +487,14 @@ a:focus-visible {
   position: relative;
   min-width: 0;
   min-height: 0;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   scrollbar-color: var(--line-strong) transparent;
   scrollbar-width: thin;
+}
+
+.canvas-viewport.zoomed {
+  overflow-x: auto;
 }
 
 .paper-grid {
@@ -504,35 +509,65 @@ a:focus-visible {
 }
 
 .flow-canvas {
+  --flow-node-width: clamp(112px, 11.5vw, 148px);
   position: relative;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
   min-height: 100%;
-  padding: 72px 80px 150px;
-  transform-origin: 60px 70px;
+  padding: 42px clamp(24px, 4vw, 58px) 116px;
+  transform-origin: top center;
   transition: transform 180ms ease;
   animation: canvas-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.flow-strip {
+.flow-map {
   display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.flow-map-compact {
+  display: none;
+}
+
+.flow-row-group {
+  width: 100%;
+}
+
+.flow-row {
+  display: flex;
+  width: 100%;
+  min-height: 146px;
   align-items: center;
-  min-width: max-content;
+}
+
+.flow-row.reverse {
+  flex-direction: row-reverse;
 }
 
 .flow-step {
   display: flex;
+  min-width: 0;
+  flex: 1 1 0;
   align-items: center;
+}
+
+.flow-step:last-child {
+  flex: 0 0 var(--flow-node-width);
+}
+
+.flow-row.reverse .flow-step {
+  flex-direction: row-reverse;
 }
 
 .graph-node {
   position: relative;
   display: flex;
-  width: 154px;
-  min-height: 116px;
+  width: var(--flow-node-width);
+  min-height: 138px;
+  flex: 0 0 var(--flow-node-width);
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 17px 14px 14px;
   border: 1.5px solid var(--ink);
   border-radius: 7px 10px 6px 11px;
@@ -603,9 +638,68 @@ a:focus-visible {
   line-height: 1.45;
 }
 
+.multiplicity {
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 7px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+
+.replica-icons {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.replica-icons i {
+  display: block;
+  width: 11px;
+  height: 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  box-shadow: 1px 1px 0 rgba(32, 37, 31, 0.12);
+}
+
+.replica-icons i.active {
+  height: 16px;
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.multiplicity-example .replica-icons i:not(.active) {
+  border-style: dashed;
+}
+
+.multiplicity-dynamic .replica-icons i:last-child {
+  opacity: 0.45;
+}
+
+.multiplicity-copy {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.05;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multiplicity-copy b {
+  margin-right: 2px;
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
 .drill-affordance {
   align-self: flex-end;
-  margin-top: 11px;
+  margin-top: 9px;
   border-bottom: 1px dashed var(--accent);
   color: var(--accent);
   font-size: 9px;
@@ -615,18 +709,20 @@ a:focus-visible {
 .flow-edge {
   position: relative;
   display: flex;
-  width: 96px;
+  min-width: 20px;
   height: 76px;
+  flex: 1 1 auto;
   align-items: center;
 }
 
 .flow-edge > span {
   position: absolute;
   top: 16px;
-  left: 42px;
+  left: 50%;
   color: var(--line-strong);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 9px;
+  transform: translateX(-50%);
 }
 
 .flow-edge > i {
@@ -652,8 +748,8 @@ a:focus-visible {
 .flow-edge > small {
   position: absolute;
   top: 47px;
-  left: 4px;
-  width: 88px;
+  left: 0;
+  width: 100%;
   overflow: hidden;
   color: var(--muted);
   font-size: 9px;
@@ -662,13 +758,85 @@ a:focus-visible {
   white-space: nowrap;
 }
 
+.flow-row.reverse .flow-edge > i::after {
+  right: auto;
+  left: 0;
+  transform: rotate(-135deg);
+}
+
+.flow-turn {
+  position: relative;
+  width: 100%;
+  height: 54px;
+}
+
+.flow-turn > i {
+  position: absolute;
+  top: -4px;
+  bottom: 3px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.flow-turn > i::after {
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid var(--ink);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: "";
+}
+
+.flow-turn > span,
+.flow-turn > small {
+  position: absolute;
+  font-size: 9px;
+}
+
+.flow-turn > span {
+  top: 8px;
+  color: var(--line-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.flow-turn > small {
+  top: 25px;
+  max-width: 120px;
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.turn-right > i {
+  right: calc(var(--flow-node-width) / 2 - 1px);
+}
+
+.turn-right > span,
+.turn-right > small {
+  right: calc(var(--flow-node-width) / 2 + 11px);
+  text-align: right;
+}
+
+.turn-left > i {
+  left: calc(var(--flow-node-width) / 2 - 1px);
+}
+
+.turn-left > span,
+.turn-left > small {
+  left: calc(var(--flow-node-width) / 2 + 11px);
+}
+
 .branch-lane {
-  display: flex;
-  width: min(1040px, calc(100vw - 700px));
-  min-width: 620px;
-  flex-wrap: wrap;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 8px;
-  margin-top: 88px;
+  margin-top: 48px;
   padding-top: 20px;
   border-top: 1px dashed #bd7d5e;
 }
@@ -684,7 +852,7 @@ a:focus-visible {
 
 .branch-note {
   display: flex;
-  max-width: 310px;
+  width: 100%;
   gap: 9px;
   padding: 9px 11px;
   border: 0;
@@ -744,7 +912,7 @@ a:focus-visible {
   right: 0;
   bottom: 44px;
   display: grid;
-  width: 190px;
+  width: 214px;
   gap: 10px;
   padding: 14px;
   border: 1px solid var(--line-strong);
@@ -777,6 +945,25 @@ a:focus-visible {
   height: 14px;
   border-right: 2px solid var(--accent);
   border-bottom: 2px solid var(--accent);
+}
+
+.legend-multiplicity {
+  display: flex;
+  width: 25px;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.legend-multiplicity b {
+  width: 6px;
+  height: 9px;
+  border: 1px solid var(--line-strong);
+}
+
+.legend-multiplicity b:first-child {
+  height: 13px;
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 .inspector {
@@ -829,6 +1016,35 @@ a:focus-visible {
   font-family: Georgia, "Songti SC", serif;
   font-size: 14px;
   line-height: 1.8;
+}
+
+.quantity-detail {
+  margin: -4px 0 22px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--paper);
+}
+
+.quantity-detail > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.quantity-detail > strong {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+}
+
+.quantity-detail > p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
 }
 
 .neighbors {
@@ -1036,6 +1252,20 @@ a:focus-visible {
   }
 }
 
+@media (max-width: 1080px) {
+  .flow-canvas {
+    --flow-node-width: clamp(132px, 18vw, 156px);
+  }
+
+  .flow-map-desktop {
+    display: none;
+  }
+
+  .flow-map-compact {
+    display: flex;
+  }
+}
+
 @media (max-width: 860px) {
   .app-shell {
     display: block;
@@ -1116,7 +1346,8 @@ a:focus-visible {
   }
 
   .canvas-viewport {
-    height: 460px;
+    height: min(68svh, 620px);
+    min-height: 520px;
   }
 
   .paper-grid {
@@ -1125,11 +1356,12 @@ a:focus-visible {
   }
 
   .flow-canvas {
-    padding: 68px 42px 130px;
+    --flow-node-width: clamp(132px, 20vw, 156px);
+    padding: 42px 28px 112px;
   }
 
   .branch-lane {
-    width: 680px;
+    width: 100%;
   }
 
   .inspector {
@@ -1172,6 +1404,16 @@ a:focus-visible {
 
   .page-title-row p {
     max-width: 300px;
+  }
+
+  .flow-canvas {
+    --flow-node-width: clamp(124px, 34vw, 146px);
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .branch-lane {
+    grid-template-columns: 1fr;
   }
 
   .canvas-toolbar {

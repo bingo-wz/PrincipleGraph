@@ -53,6 +53,14 @@ function validateSemantics(pack) {
       if (nodeKeys.has(node.key)) {
         violations.push(`DUPLICATE_NODE:${page.slug}:${node.key}`);
       }
+      if (
+        node.multiplicity?.selectedCount !== undefined &&
+        node.multiplicity.selectedCount > node.multiplicity.visualCount
+      ) {
+        violations.push(
+          `MULTIPLICITY_SELECTION_OVERFLOW:${page.slug}:${node.key}`,
+        );
+      }
       nodeKeys.add(node.key);
       adjacency.set(node.key, []);
     }

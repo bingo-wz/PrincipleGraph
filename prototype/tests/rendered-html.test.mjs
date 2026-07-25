@@ -36,6 +36,7 @@ test("服务端渲染 PrincipleGraph 首层链路", async () => {
   assert.match(html, /DNS 解析/);
   assert.match(html, /API Gateway/);
   assert.match(html, /Java 服务实例/);
+  assert.match(html, /个 Java 实例/);
   assert.match(html, /进入原理/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
   assert.doesNotMatch(html, /react-loading-skeleton/);
@@ -56,10 +57,22 @@ test("原型保留核心交互与可访问性结构", async () => {
   assert.match(page, /onDoubleClick/);
   assert.match(page, /openReference/);
   assert.match(page, /returnToOrigin/);
+  assert.match(page, /flow-map-desktop/);
+  assert.match(page, /flow-map-compact/);
+  assert.match(page, /quantity-detail/);
   assert.match(layout, /globals\.css/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /\.graph-node\.selected/);
+  assert.match(
+    css,
+    /\.canvas-viewport\s*\{[^}]*overflow-x:\s*hidden/s,
+  );
+  assert.match(css, /\.flow-row\.reverse/);
+  assert.match(css, /\.replica-icons i\.active/);
   assert.match(graphData, /synchronized-and-jmm/);
+  assert.match(graphData, /multiplicity/);
+  assert.match(graphData, /个 Java 实例/);
+  assert.match(graphData, /个 Worker/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.doesNotMatch(page, /_sites-preview|SkeletonPreview/);
 

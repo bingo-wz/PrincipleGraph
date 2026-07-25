@@ -6,12 +6,22 @@ export type NodeKind =
   | "data"
   | "runtime";
 
+export type Multiplicity = {
+  mode: "exact" | "example" | "dynamic";
+  value: string;
+  unit: string;
+  visualCount: number;
+  selectedCount?: number;
+  note: string;
+};
+
 export type GraphNode = {
   key: string;
   label: string;
   kind: NodeKind;
   description: string;
   detail: string;
+  multiplicity?: Multiplicity;
   drillTo?: string;
   edgeLabel?: string;
 };
@@ -81,6 +91,14 @@ export const graphPages: GraphPage[] = [
         kind: "component",
         description: "路由 · 鉴权 · 限流",
         detail: "把路径匹配到逻辑服务，获取候选实例并选择健康目标。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "G",
+          unit: "个 Gateway",
+          visualCount: 2,
+          selectedCount: 1,
+          note: "Gateway 副本数由部署与健康状态动态决定；当前请求只经过其中 1 个实例。",
+        },
         drillTo: "edge-routing-and-discovery",
         edgeLabel: "选择实例",
       },
@@ -90,6 +108,14 @@ export const graphPages: GraphPage[] = [
         kind: "runtime",
         description: "容器内运行",
         detail: "请求到达服务器和容器后，由 Servlet 容器接收。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "N",
+          unit: "个 Java 实例",
+          visualCount: 3,
+          selectedCount: 1,
+          note: "三个图标仅用于表达多实例；实际副本数是动态 N，本次请求命中其中 1 个。",
+        },
         drillTo: "server-container-path",
         edgeLabel: "进入业务",
       },
@@ -192,6 +218,13 @@ export const graphPages: GraphPage[] = [
         kind: "data",
         description: "发现缓存 / 注册中心",
         detail: "从服务发现实现中取得候选 ServiceInstance 列表。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "N",
+          unit: "个候选实例",
+          visualCount: 4,
+          note: "候选数量随注册、下线、健康检查和缓存时效变化，图标数量不代表实时值。",
+        },
         edgeLabel: "过滤",
       },
       {
@@ -216,6 +249,14 @@ export const graphPages: GraphPage[] = [
         kind: "exit",
         description: "出口",
         detail: "使用目标地址重写 URI 并建立下游请求。",
+        multiplicity: {
+          mode: "exact",
+          value: "1",
+          unit: "个已选实例",
+          visualCount: 1,
+          selectedCount: 1,
+          note: "本页描述一次负载均衡决策，因此主链路只选择 1 个目标实例。",
+        },
         drillTo: "server-container-path",
       },
     ],
@@ -298,6 +339,14 @@ export const graphPages: GraphPage[] = [
         kind: "runtime",
         description: "隔离网络栈",
         detail: "通过容器侧 veth 进入独立接口、路由和 socket 视图。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "N",
+          unit: "个容器副本",
+          visualCount: 3,
+          selectedCount: 1,
+          note: "系统可以有多个容器副本；本层只展开当前请求命中的 1 个容器网络命名空间。",
+        },
         edgeLabel: "端口匹配",
       },
       {
@@ -363,6 +412,14 @@ export const graphPages: GraphPage[] = [
         kind: "runtime",
         description: "线程池",
         detail: "Connector 使用内部线程池或共享 Executor 执行请求。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "T",
+          unit: "个工作线程",
+          visualCount: 4,
+          selectedCount: 1,
+          note: "线程池包含动态或配置数量的 Worker；当前请求在其中 1 个线程上执行。",
+        },
         drillTo: "jvm-thread-execution",
         edgeLabel: "Servlet 调用",
       },
@@ -586,6 +643,14 @@ export const graphPages: GraphPage[] = [
         kind: "entry",
         description: "入口",
         detail: "通过已有 MySQL 连接发送参数化 SQL。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "C",
+          unit: "条池化连接",
+          visualCount: 3,
+          selectedCount: 1,
+          note: "连接池可维护 C 条连接；当前 SQL 只借用其中 1 条连接并对应 1 个 MySQL Session。",
+        },
         edgeLabel: "MySQL Protocol",
       },
       {
@@ -704,6 +769,13 @@ export const graphPages: GraphPage[] = [
         kind: "entry",
         description: "入口",
         detail: "请求任务等待可用 Worker；队列长度构成排队延迟。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "Q",
+          unit: "个排队任务",
+          visualCount: 4,
+          note: "Q 会随并发与处理速度变化；图标表达队列中可能同时存在多个任务。",
+        },
         edgeLabel: "Worker 取任务",
       },
       {
@@ -712,6 +784,14 @@ export const graphPages: GraphPage[] = [
         kind: "runtime",
         description: "Executor Worker",
         detail: "取得任务并开始在当前 Java 线程上执行。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "T",
+          unit: "个 Worker",
+          visualCount: 4,
+          selectedCount: 1,
+          note: "线程池中有 T 个 Worker；高亮图标表示当前请求实际占用的 1 个线程。",
+        },
         edgeLabel: "方法调用",
       },
       {
@@ -828,6 +908,14 @@ export const graphPages: GraphPage[] = [
         kind: "runtime",
         description: "等待策略是实现细节",
         detail: "竞争线程需要等待；JVM 实现可选择自旋、阻塞或 park。",
+        multiplicity: {
+          mode: "dynamic",
+          value: "K",
+          unit: "个竞争线程",
+          visualCount: 4,
+          selectedCount: 1,
+          note: "K 表示同一 monitor 上的动态竞争线程数；高亮线程最终获得 monitor。",
+        },
         edgeLabel: "获取成功",
       },
       {
@@ -836,6 +924,14 @@ export const graphPages: GraphPage[] = [
         kind: "action",
         description: "持有 monitor",
         detail: "持有者执行受保护代码；synchronized 对同一线程可重入。",
+        multiplicity: {
+          mode: "exact",
+          value: "1",
+          unit: "个持有线程",
+          visualCount: 1,
+          selectedCount: 1,
+          note: "对同一个 monitor，同一时刻只有 1 个线程持有并执行受保护临界区。",
+        },
         edgeLabel: "读写状态",
       },
       {

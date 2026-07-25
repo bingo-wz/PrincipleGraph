@@ -1,0 +1,39 @@
+name: 知识链路提案
+description: 提议新的场景、知识页或下钻链路
+title: "[Knowledge] "
+labels: ["content"]
+body:
+  - type: input
+    id: audience
+    attributes:
+      label: 目标用户
+      placeholder: 例如：准备 Java 中高级面试的工程师
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: 用户要回答的问题
+      description: 用一个具体问题描述价值，不要只写技术名词。
+    validations:
+      required: true
+  - type: textarea
+    id: flow
+    attributes:
+      label: 建议主链路
+      description: 写出入口、关键步骤与出口。
+      placeholder: 入口 → 步骤 A → 步骤 B → 出口
+    validations:
+      required: true
+  - type: textarea
+    id: drill
+    attributes:
+      label: 可下钻节点与层级边界
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: 官方资料与适用版本
+    validations:
+      required: true
