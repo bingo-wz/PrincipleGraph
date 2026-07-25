@@ -217,8 +217,19 @@
     "layout": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["direction"],
+      "required": ["direction", "diagramType"],
       "properties": {
+        "diagramType": {
+          "enum": [
+            "SOFTWARE_ARCHITECTURE",
+            "LOGICAL_DATA_FLOW",
+            "PHYSICAL_DATA_FLOW",
+            "SEQUENCE",
+            "STATE_MACHINE",
+            "CALL_FLOW",
+            "HYBRID"
+          ]
+        },
         "direction": {
           "enum": ["RIGHT", "DOWN"]
         },

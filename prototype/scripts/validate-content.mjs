@@ -186,6 +186,13 @@ assert(
   "Schema 反例应被拒绝，但校验结果为通过",
 );
 
+const invalidDiagramTypeFixture = structuredClone(validFixture);
+invalidDiagramTypeFixture.pages[0].layout.diagramType = "GENERIC_WHITEBOARD";
+assert(
+  !validateSchema(invalidDiagramTypeFixture),
+  "非法图型应被 Schema 拒绝，但校验结果为通过",
+);
+
 assert(
   validateSchema(invalidSemanticFixture),
   `语义反例应先通过 Schema：${JSON.stringify(validateSchema.errors)}`,
@@ -204,4 +211,5 @@ assert(
 
 console.log("Content Schema v1：有效 fixture 通过");
 console.log("Schema 反例：已正确拒绝");
+console.log("图型反例：已正确拒绝");
 console.log(`语义反例：已正确拒绝（${semanticViolations.join(", ")}）`);
