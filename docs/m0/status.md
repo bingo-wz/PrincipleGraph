@@ -9,6 +9,7 @@
 | D-01 | 视觉语义与低保真原型 | `IMPLEMENTED` | 可点击原型支持无横向滚动的蛇形主链路、数量语义、搜索、下钻、来源返回和双链 | 使用真实用户完成可用性测试 |
 | A-01 | 领域模型与 ADR | `ACCEPTED` | 10 个已接受 ADR 已落盘，GitHub 为主仓库、Sites 为部署镜像 | M1 用测试落实边界 |
 | C-01 | Content Schema v1 | `VALIDATED` | JSON Schema 已覆盖图型、适配视口与数量模型，并有正反例和自动校验脚本 | 技术审核后冻结为 v1.0.0 |
+| R-01 | 公开 Demo | `PUBLISHED` | [Sites 生产环境](https://principlegraph-m0.bingoyy.chatgpt.site) 已公开，版本 1 对应 GitHub `main` 提交 `332f308` | 收集真实用户反馈并纳入 M0 评审 |
 
 ## 已通过的自动检查
 

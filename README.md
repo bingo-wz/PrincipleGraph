@@ -8,6 +8,8 @@ PrincipleGraph 用可下钻、可双链的结构化图谱，解释一个系统�
 
 项目目标不止是 Java 面试知识库。稳定的 Content Schema、分层链路和双链模型最终可以用于解释任意项目架构、业务场景或专业知识体系。
 
+**公开 Demo：** [principlegraph-m0.bingoyy.chatgpt.site](https://principlegraph-m0.bingoyy.chatgpt.site)
+
 > 当前阶段：M0 可点击原型与内容模型验证。欢迎 Java 技术审核、交互反馈和首批贡献者。
 
 ## 为什么做 PrincipleGraph
