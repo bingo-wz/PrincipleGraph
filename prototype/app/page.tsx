@@ -1,10 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  assetCatalog,
+  assetCategoryLabels,
+  assetsByKey,
+  AssetGlyphView,
+  type AssetCategory,
+  type AssetLanguage,
+} from "./asset-library";
+import {
+  DiagramRenderer,
+  diagramTypeLabels,
+} from "./diagram-renderers";
 import {
   graphPages,
   incomingReferences,
   pagesBySlug,
+  type DiagramType,
   type GraphNode,
 } from "./graph-data";
 
@@ -28,134 +41,13 @@ const multiplicityModeLabel = {
   dynamic: "动态数量",
 } as const;
 
-type FlowMapProps = {
-  nodes: GraphNode[];
-  columns: number;
-  selectedKey: string | null;
-  onSelect: (node: GraphNode) => void;
-  onDrill: (slug: string) => void;
-  className: string;
-};
+const supportedDiagramTypes: DiagramType[] = [
+  "SOFTWARE_ARCHITECTURE",
+  "SEQUENCE",
+  "LOGICAL_DATA_FLOW",
+];
 
-function FlowMap({
-  nodes,
-  columns,
-  selectedKey,
-  onSelect,
-  onDrill,
-  className,
-}: FlowMapProps) {
-  const rows = Array.from(
-    { length: Math.ceil(nodes.length / columns) },
-    (_, rowIndex) =>
-      nodes
-        .slice(rowIndex * columns, (rowIndex + 1) * columns)
-        .map((node, offset) => ({
-          node,
-          index: rowIndex * columns + offset,
-        })),
-  );
-
-  return (
-    <div
-      className={`flow-map ${className}`}
-      aria-label={`执行链路，共 ${nodes.length} 个步骤`}
-    >
-      {rows.map((row, rowIndex) => {
-        const reverse = rowIndex % 2 === 1;
-        const turn = row[row.length - 1];
-
-        return (
-          <div className="flow-row-group" key={`row-${rowIndex}`}>
-            <div className={`flow-row${reverse ? " reverse" : ""}`}>
-              {row.map(({ node, index }, offset) => {
-                const active = node.key === selectedKey;
-                return (
-                  <div className="flow-step" key={node.key}>
-                    <button
-                      className={`graph-node kind-${node.kind}${active ? " selected" : ""}`}
-                      onClick={() => onSelect(node)}
-                      onDoubleClick={() => node.drillTo && onDrill(node.drillTo)}
-                      aria-label={`${node.label}${node.multiplicity ? `，${node.multiplicity.value}${node.multiplicity.unit}` : ""}`}
-                      aria-pressed={active}
-                    >
-                      <span className="node-kind">{kindLabel[node.kind]}</span>
-                      <strong>{node.label}</strong>
-                      <small>{node.description}</small>
-                      {node.multiplicity && (
-                        <span
-                          className={`multiplicity multiplicity-${node.multiplicity.mode}`}
-                          title={node.multiplicity.note}
-                        >
-                          <span className="replica-icons" aria-hidden="true">
-                            {Array.from({
-                              length: node.multiplicity.visualCount,
-                            }).map((_, iconIndex) => (
-                              <i
-                                className={
-                                  iconIndex <
-                                  (node.multiplicity?.selectedCount ?? 0)
-                                    ? "active"
-                                    : ""
-                                }
-                                key={iconIndex}
-                              />
-                            ))}
-                          </span>
-                          <span className="multiplicity-copy">
-                            <b>{node.multiplicity.value}</b>
-                            {node.multiplicity.unit}
-                          </span>
-                        </span>
-                      )}
-                      {node.drillTo && (
-                        <span
-                          className="drill-affordance"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            onDrill(node.drillTo!);
-                          }}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter" || event.key === " ") {
-                              event.preventDefault();
-                              event.stopPropagation();
-                              onDrill(node.drillTo!);
-                            }
-                          }}
-                          role="button"
-                          tabIndex={0}
-                        >
-                          进入原理 ↘
-                        </span>
-                      )}
-                    </button>
-                    {offset < row.length - 1 && (
-                      <div className="flow-edge" aria-hidden="true">
-                        <span>{index + 1}</span>
-                        <i />
-                        <small>{node.edgeLabel ?? "继续"}</small>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            {rowIndex < rows.length - 1 && turn && (
-              <div
-                className={`flow-turn ${reverse ? "turn-left" : "turn-right"}`}
-                aria-hidden="true"
-              >
-                <span>{turn.index + 1}</span>
-                <small>{turn.node.edgeLabel ?? "继续"}</small>
-                <i />
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
+const assetCategories = Object.keys(assetCategoryLabels) as AssetCategory[];
 
 export default function Home() {
   const [currentSlug, setCurrentSlug] = useState("http-request-panorama");
@@ -165,8 +57,19 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [zoom, setZoom] = useState(1);
   const [legendOpen, setLegendOpen] = useState(false);
+  const [viewOverride, setViewOverride] = useState<DiagramType | null>(null);
+  const [assetLibraryOpen, setAssetLibraryOpen] = useState(false);
+  const [assetLanguage, setAssetLanguage] = useState<AssetLanguage>("zh");
+  const [assetCategory, setAssetCategory] = useState<AssetCategory | "all">(
+    "all",
+  );
+  const [assetQuery, setAssetQuery] = useState("");
+  const [selectedAssetKey, setSelectedAssetKey] = useState(
+    "multi-instance-server",
+  );
 
   const page = pagesBySlug.get(currentSlug) ?? graphPages[0];
+  const activeDiagramType = viewOverride ?? page.diagramType;
   const selectedNode =
     page.nodes.find((node) => node.key === selectedKey) ?? null;
   const selectedIndex = selectedNode
@@ -199,6 +102,49 @@ export default function Home() {
       .slice(0, 6);
   }, [query]);
 
+  const filteredAssets = useMemo(() => {
+    const normalized = assetQuery.trim().toLocaleLowerCase();
+    return assetCatalog.filter((asset) => {
+      const categoryMatched =
+        assetCategory === "all" || asset.category === assetCategory;
+      const queryMatched =
+        normalized.length === 0 ||
+        [
+          asset.key,
+          asset.name.zh,
+          asset.name.en,
+          asset.description.zh,
+          asset.description.en,
+          ...asset.aliases,
+        ]
+          .join(" ")
+          .toLocaleLowerCase()
+          .includes(normalized);
+      return categoryMatched && queryMatched;
+    });
+  }, [assetCategory, assetQuery]);
+
+  const selectedAsset =
+    assetsByKey.get(selectedAssetKey) ?? assetCatalog[0];
+  const selectedAssetUsages = useMemo(
+    () =>
+      graphPages.flatMap((candidate) =>
+        candidate.nodes
+          .filter((node) => node.assetKey === selectedAssetKey)
+          .map((node) => ({ page: candidate, node })),
+      ),
+    [selectedAssetKey],
+  );
+
+  useEffect(() => {
+    if (!assetLibraryOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setAssetLibraryOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [assetLibraryOpen]);
+
   const openDirect = (slug: string, nodeKey?: string) => {
     const next = pagesBySlug.get(slug);
     if (!next) return;
@@ -208,6 +154,7 @@ export default function Home() {
     setSelectedKey(nodeKey ?? next.nodes[0]?.key ?? null);
     setQuery("");
     setZoom(1);
+    setViewOverride(null);
   };
 
   const drill = (slug: string) => {
@@ -218,6 +165,7 @@ export default function Home() {
     setOrigin(null);
     setSelectedKey(next.nodes[0]?.key ?? null);
     setZoom(1);
+    setViewOverride(null);
   };
 
   const openReference = (slug: string) => {
@@ -228,6 +176,7 @@ export default function Home() {
     setTrail([slug]);
     setSelectedKey(next.nodes[0]?.key ?? null);
     setZoom(1);
+    setViewOverride(null);
   };
 
   const goBack = () => {
@@ -239,6 +188,7 @@ export default function Home() {
     setCurrentSlug(slug);
     setSelectedKey(next?.nodes[0]?.key ?? null);
     setZoom(1);
+    setViewOverride(null);
   };
 
   const returnToOrigin = () => {
@@ -249,6 +199,7 @@ export default function Home() {
     setSelectedKey(origin.nodeKey ?? next?.nodes[0]?.key ?? null);
     setOrigin(null);
     setZoom(1);
+    setViewOverride(null);
   };
 
   const selectNode = (node: GraphNode) => {
@@ -314,9 +265,19 @@ export default function Home() {
           )}
         </div>
 
-        <div className="top-status">
-          <span className="status-dot" />
-          <span>内容样板 v0.1</span>
+        <div className="top-tools">
+          <button
+            className="asset-library-trigger"
+            onClick={() => setAssetLibraryOpen(true)}
+          >
+            <span aria-hidden="true">⌘</span>
+            素材库
+            <b>{assetCatalog.length}</b>
+          </button>
+          <div className="top-status">
+            <span className="status-dot" />
+            <span>多图型样板 v0.2</span>
+          </div>
         </div>
       </header>
 
@@ -338,7 +299,8 @@ export default function Home() {
                 <span className="nav-copy">
                   <strong>{candidate.title}</strong>
                   <small>
-                    {candidate.level} · {candidate.domain}
+                    {candidate.level} ·{" "}
+                    {diagramTypeLabels[candidate.diagramType].zh}
                   </small>
                 </span>
                 {active && <span className="nav-active-mark" />}
@@ -368,6 +330,7 @@ export default function Home() {
                         setTrail(nextTrail);
                         setCurrentSlug(slug);
                         setSelectedKey(item?.nodes[0]?.key ?? null);
+                        setViewOverride(null);
                       }}
                     >
                       {item?.title}
@@ -382,6 +345,22 @@ export default function Home() {
                 <h1>{page.title}</h1>
                 <p>{page.question}</p>
               </div>
+            </div>
+            <div className="diagram-switcher" aria-label="图型切换">
+              {supportedDiagramTypes.map((type) => (
+                <button
+                  className={activeDiagramType === type ? "active" : ""}
+                  key={type}
+                  onClick={() =>
+                    setViewOverride(type === page.diagramType ? null : type)
+                  }
+                  aria-pressed={activeDiagramType === type}
+                  title={diagramTypeLabels[type].en}
+                >
+                  {page.diagramType === type && <i />}
+                  {diagramTypeLabels[type].zh}
+                </button>
+              ))}
             </div>
           </div>
           <div className="workspace-actions">
@@ -406,24 +385,22 @@ export default function Home() {
           <div className="paper-grid" />
           <div
             className="flow-canvas"
-            key={page.slug}
+            key={`${page.slug}-${activeDiagramType}`}
             style={{ transform: `scale(${zoom})` }}
           >
-            <FlowMap
+            <div className="diagram-caption">
+              <span>{diagramTypeLabels[activeDiagramType].zh}</span>
+              <small>{diagramTypeLabels[activeDiagramType].en}</small>
+              {viewOverride && viewOverride !== page.diagramType && (
+                <b>预览视图</b>
+              )}
+            </div>
+            <DiagramRenderer
+              type={activeDiagramType}
               nodes={page.nodes}
-              columns={4}
               selectedKey={selectedKey}
               onSelect={selectNode}
               onDrill={drill}
-              className="flow-map-desktop"
-            />
-            <FlowMap
-              nodes={page.nodes}
-              columns={2}
-              selectedKey={selectedKey}
-              onSelect={selectNode}
-              onDrill={drill}
-              className="flow-map-compact"
             />
 
             <div className="branch-lane">
@@ -499,6 +476,29 @@ export default function Home() {
             </div>
             <h2>{selectedNode.label}</h2>
             <p className="lead">{selectedNode.detail}</p>
+
+            {selectedNode.assetKey && assetsByKey.has(selectedNode.assetKey) && (
+              <button
+                className="node-asset-reference"
+                onClick={() => {
+                  setSelectedAssetKey(selectedNode.assetKey!);
+                  setAssetLibraryOpen(true);
+                }}
+              >
+                <AssetGlyphView
+                  assetKey={selectedNode.assetKey}
+                  label={selectedNode.label}
+                  compact
+                />
+                <span>
+                  <small>复用素材</small>
+                  <strong>
+                    {assetsByKey.get(selectedNode.assetKey)?.name.zh}
+                  </strong>
+                </span>
+                <b>查看 ↗</b>
+              </button>
+            )}
 
             {selectedNode.multiplicity && (
               <div className="quantity-detail">
@@ -601,6 +601,179 @@ export default function Home() {
           </div>
         )}
       </aside>
+
+      {assetLibraryOpen && (
+        <div
+          className="asset-library-layer"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setAssetLibraryOpen(false);
+            }
+          }}
+        >
+          <section
+            className="asset-library-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="系统设计素材库"
+          >
+            <header className="asset-library-head">
+              <div>
+                <span>Reusable system assets</span>
+                <h2>系统设计素材库</h2>
+                <p>
+                  统一素材键、双语名称与分类，在不同知识页和图型之间复用。
+                </p>
+              </div>
+              <div className="asset-library-head-actions">
+                <div className="language-switch" aria-label="素材语言">
+                  <button
+                    className={assetLanguage === "zh" ? "active" : ""}
+                    onClick={() => setAssetLanguage("zh")}
+                    aria-pressed={assetLanguage === "zh"}
+                  >
+                    中文
+                  </button>
+                  <button
+                    className={assetLanguage === "en" ? "active" : ""}
+                    onClick={() => setAssetLanguage("en")}
+                    aria-pressed={assetLanguage === "en"}
+                  >
+                    EN
+                  </button>
+                </div>
+                <button
+                  className="asset-library-close"
+                  onClick={() => setAssetLibraryOpen(false)}
+                  aria-label="关闭素材库"
+                >
+                  ×
+                </button>
+              </div>
+            </header>
+
+            <div className="asset-library-controls">
+              <label>
+                <span aria-hidden="true">⌕</span>
+                <input
+                  value={assetQuery}
+                  onChange={(event) => setAssetQuery(event.target.value)}
+                  placeholder={
+                    assetLanguage === "zh"
+                      ? "搜索 DNS、数据库、队列…"
+                      : "Search DNS, database, queue…"
+                  }
+                  aria-label="搜索素材"
+                />
+              </label>
+              <div className="asset-category-tabs" aria-label="素材分类">
+                <button
+                  className={assetCategory === "all" ? "active" : ""}
+                  onClick={() => setAssetCategory("all")}
+                >
+                  {assetLanguage === "zh" ? "全部" : "All"}
+                </button>
+                {assetCategories.map((category) => (
+                  <button
+                    className={assetCategory === category ? "active" : ""}
+                    key={category}
+                    onClick={() => setAssetCategory(category)}
+                  >
+                    {assetCategoryLabels[category][assetLanguage]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="asset-library-content">
+              <div className="asset-grid" aria-label="素材列表">
+                {filteredAssets.map((asset) => {
+                  const usageCount = graphPages.reduce(
+                    (count, candidate) =>
+                      count +
+                      candidate.nodes.filter(
+                        (node) => node.assetKey === asset.key,
+                      ).length,
+                    0,
+                  );
+                  return (
+                    <button
+                      className={
+                        selectedAssetKey === asset.key
+                          ? "asset-card selected"
+                          : "asset-card"
+                      }
+                      key={asset.key}
+                      onClick={() => setSelectedAssetKey(asset.key)}
+                      aria-pressed={selectedAssetKey === asset.key}
+                    >
+                      <AssetGlyphView
+                        assetKey={asset.key}
+                        label={asset.name[assetLanguage]}
+                      />
+                      <span>
+                        <strong>{asset.name[assetLanguage]}</strong>
+                        <small>
+                          {assetCategoryLabels[asset.category][assetLanguage]}
+                        </small>
+                      </span>
+                      <b>{usageCount}</b>
+                    </button>
+                  );
+                })}
+                {filteredAssets.length === 0 && (
+                  <p className="asset-empty">没有匹配的素材。</p>
+                )}
+              </div>
+
+              <aside className="asset-detail">
+                <AssetGlyphView
+                  assetKey={selectedAsset.key}
+                  label={selectedAsset.name[assetLanguage]}
+                />
+                <span className="asset-detail-category">
+                  {assetCategoryLabels[selectedAsset.category][assetLanguage]}
+                </span>
+                <h3>{selectedAsset.name[assetLanguage]}</h3>
+                <small>{selectedAsset.name[assetLanguage === "zh" ? "en" : "zh"]}</small>
+                <p>{selectedAsset.description[assetLanguage]}</p>
+                <code>{selectedAsset.key}</code>
+                <div className="asset-tags">
+                  {selectedAsset.aliases.slice(0, 5).map((alias) => (
+                    <span key={alias}>{alias}</span>
+                  ))}
+                </div>
+                <div className="asset-usage">
+                  <strong>
+                    {assetLanguage === "zh" ? "已复用位置" : "Used in"}
+                    <b>{selectedAssetUsages.length}</b>
+                  </strong>
+                  {selectedAssetUsages.slice(0, 5).map((usage) => (
+                    <button
+                      key={`${usage.page.slug}-${usage.node.key}`}
+                      onClick={() => {
+                        openDirect(usage.page.slug, usage.node.key);
+                        setAssetLibraryOpen(false);
+                      }}
+                    >
+                      <span>{usage.page.level}</span>
+                      <span>
+                        <strong>{usage.node.label}</strong>
+                        <small>{usage.page.title}</small>
+                      </span>
+                      <b>↗</b>
+                    </button>
+                  ))}
+                  {selectedAssetUsages.length === 0 && (
+                    <p>该素材已入库，等待首个知识节点引用。</p>
+                  )}
+                </div>
+              </aside>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

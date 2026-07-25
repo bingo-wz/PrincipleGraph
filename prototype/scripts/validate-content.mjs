@@ -29,6 +29,14 @@ const validateSchema = ajv.compile(schema);
 function validateSemantics(pack) {
   const violations = [];
   const pageBySlug = new Map();
+  const assetKeys = new Set();
+
+  for (const asset of pack.assetLibrary ?? []) {
+    if (assetKeys.has(asset.key)) {
+      violations.push(`DUPLICATE_ASSET:${asset.key}`);
+    }
+    assetKeys.add(asset.key);
+  }
 
   for (const page of pack.pages) {
     if (pageBySlug.has(page.slug)) {
@@ -59,6 +67,11 @@ function validateSemantics(pack) {
       ) {
         violations.push(
           `MULTIPLICITY_SELECTION_OVERFLOW:${page.slug}:${node.key}`,
+        );
+      }
+      if (node.assetKey && !assetKeys.has(node.assetKey)) {
+        violations.push(
+          `ASSET_NOT_FOUND:${page.slug}:${node.key}:${node.assetKey}`,
         );
       }
       nodeKeys.add(node.key);
@@ -193,6 +206,15 @@ assert(
   "非法图型应被 Schema 拒绝，但校验结果为通过",
 );
 
+const invalidAssetFixture = structuredClone(validFixture);
+invalidAssetFixture.pages[0].nodes[0].assetKey = "missing-asset";
+assert(
+  validateSemantics(invalidAssetFixture).includes(
+    "ASSET_NOT_FOUND:http-request-panorama:browser:missing-asset",
+  ),
+  "语义校验未拒绝不存在的素材引用",
+);
+
 assert(
   validateSchema(invalidSemanticFixture),
   `语义反例应先通过 Schema：${JSON.stringify(validateSchema.errors)}`,
@@ -212,4 +234,5 @@ assert(
 console.log("Content Schema v1：有效 fixture 通过");
 console.log("Schema 反例：已正确拒绝");
 console.log("图型反例：已正确拒绝");
+console.log("素材引用反例：已正确拒绝");
 console.log(`语义反例：已正确拒绝（${semanticViolations.join(", ")}）`);

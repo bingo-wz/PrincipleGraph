@@ -6,6 +6,11 @@ export type NodeKind =
   | "data"
   | "runtime";
 
+export type DiagramType =
+  | "SOFTWARE_ARCHITECTURE"
+  | "SEQUENCE"
+  | "LOGICAL_DATA_FLOW";
+
 export type Multiplicity = {
   mode: "exact" | "example" | "dynamic";
   value: string;
@@ -21,6 +26,7 @@ export type GraphNode = {
   kind: NodeKind;
   description: string;
   detail: string;
+  assetKey?: string;
   multiplicity?: Multiplicity;
   drillTo?: string;
   edgeLabel?: string;
@@ -30,6 +36,7 @@ export type GraphPage = {
   slug: string;
   level: string;
   domain: string;
+  diagramType: DiagramType;
   title: string;
   question: string;
   summary: string;
@@ -45,6 +52,7 @@ export const graphPages: GraphPage[] = [
     slug: "http-request-panorama",
     level: "L0",
     domain: "系统全景",
+    diagramType: "SOFTWARE_ARCHITECTURE",
     title: "一次 HTTP 请求全景",
     question: "外部请求如何找到 Java 实例、执行业务并返回？",
     summary:
@@ -56,6 +64,7 @@ export const graphPages: GraphPage[] = [
         key: "browser",
         label: "浏览器",
         kind: "entry",
+        assetKey: "web-application",
         description: "入口",
         detail: "组装 URL、Header、Cookie 与请求体，然后发送 HTTPS 请求。",
         edgeLabel: "解析域名",
@@ -64,6 +73,7 @@ export const graphPages: GraphPage[] = [
         key: "dns",
         label: "DNS 解析",
         kind: "component",
+        assetKey: "dns",
         description: "名称 → 地址",
         detail: "把域名解析为可访问的边缘地址；DNS 不会直接执行 Java Controller。",
         edgeLabel: "连接边缘",
@@ -72,6 +82,7 @@ export const graphPages: GraphPage[] = [
         key: "edge",
         label: "CDN / WAF",
         kind: "component",
+        assetKey: "cdn",
         description: "TLS 与安全边界",
         detail: "完成边缘安全检查。本场景假设没有静态命中，请求继续回源。",
         edgeLabel: "动态回源",
@@ -80,6 +91,7 @@ export const graphPages: GraphPage[] = [
         key: "load-balancer",
         label: "负载均衡器",
         kind: "component",
+        assetKey: "load-balancer",
         description: "选择 Gateway",
         detail: "从健康的 Gateway 节点中选择一个目标，转发连接或请求。",
         drillTo: "edge-routing-and-discovery",
@@ -89,6 +101,7 @@ export const graphPages: GraphPage[] = [
         key: "gateway",
         label: "API Gateway",
         kind: "component",
+        assetKey: "multi-instance-server",
         description: "路由 · 鉴权 · 限流",
         detail: "把路径匹配到逻辑服务，获取候选实例并选择健康目标。",
         multiplicity: {
@@ -106,6 +119,7 @@ export const graphPages: GraphPage[] = [
         key: "service",
         label: "Java 服务实例",
         kind: "runtime",
+        assetKey: "multi-instance-server",
         description: "容器内运行",
         detail: "请求到达服务器和容器后，由 Servlet 容器接收。",
         multiplicity: {
@@ -123,6 +137,7 @@ export const graphPages: GraphPage[] = [
         key: "business",
         label: "业务与数据访问",
         kind: "action",
+        assetKey: "pipeline",
         description: "规则 · 事务 · SQL",
         detail: "Controller 调用应用服务，事务代理包围数据访问。",
         drillTo: "service-business-transaction",
@@ -132,6 +147,7 @@ export const graphPages: GraphPage[] = [
         key: "response-path",
         label: "响应回程",
         kind: "component",
+        assetKey: "message-queue",
         description: "沿已有连接返回",
         detail: "响应按代理和连接上下文反向穿过 Gateway 与边缘组件。",
         edgeLabel: "HTTP Response",
@@ -140,6 +156,7 @@ export const graphPages: GraphPage[] = [
         key: "browser-response",
         label: "浏览器收到响应",
         kind: "exit",
+        assetKey: "web-application",
         description: "出口",
         detail: "解析状态码、响应 Header 和响应体。",
       },
@@ -165,6 +182,7 @@ export const graphPages: GraphPage[] = [
     slug: "edge-routing-and-discovery",
     level: "L1",
     domain: "微服务",
+    diagramType: "LOGICAL_DATA_FLOW",
     title: "边缘路由与服务发现",
     question: "Gateway 如何把请求路由到一个健康服务实例？",
     summary:
@@ -176,6 +194,7 @@ export const graphPages: GraphPage[] = [
         key: "gateway-ingress",
         label: "Gateway 入站",
         kind: "entry",
+        assetKey: "multi-instance-server",
         description: "入口",
         detail: "接收外部负载均衡器转发的 HTTP 请求。",
         edgeLabel: "解析",
@@ -184,6 +203,7 @@ export const graphPages: GraphPage[] = [
         key: "normalize",
         label: "请求规范化",
         kind: "action",
+        assetKey: "pipeline",
         description: "Host · Path · Method",
         detail: "解析路由所需的 Host、Path、Method 和关键 Header。",
         edgeLabel: "身份上下文",
@@ -192,6 +212,7 @@ export const graphPages: GraphPage[] = [
         key: "security",
         label: "鉴权",
         kind: "component",
+        assetKey: "auth-iam",
         description: "401 / 403 边界",
         detail: "验证身份和权限；失败时直接返回，不进入后续实例选择。",
         edgeLabel: "通过",
@@ -200,6 +221,7 @@ export const graphPages: GraphPage[] = [
         key: "rate-limit",
         label: "限流",
         kind: "component",
+        assetKey: "pipeline",
         description: "配额与流量保护",
         detail: "检查租户、用户或路由配额；失败通常返回 429。",
         edgeLabel: "通过",
@@ -216,6 +238,7 @@ export const graphPages: GraphPage[] = [
         key: "instance-supplier",
         label: "实例列表",
         kind: "data",
+        assetKey: "multi-instance-server",
         description: "发现缓存 / 注册中心",
         detail: "从服务发现实现中取得候选 ServiceInstance 列表。",
         multiplicity: {
@@ -239,6 +262,7 @@ export const graphPages: GraphPage[] = [
         key: "load-balance",
         label: "负载均衡策略",
         kind: "component",
+        assetKey: "load-balancer",
         description: "Round Robin / 权重",
         detail: "从候选集选择一个实例；重试必须考虑请求幂等性。",
         edgeLabel: "重写 URI",
@@ -247,6 +271,7 @@ export const graphPages: GraphPage[] = [
         key: "selected-instance",
         label: "目标实例",
         kind: "exit",
+        assetKey: "application-server",
         description: "出口",
         detail: "使用目标地址重写 URI 并建立下游请求。",
         multiplicity: {
@@ -286,6 +311,7 @@ export const graphPages: GraphPage[] = [
     slug: "server-container-path",
     level: "L1",
     domain: "Linux / Docker",
+    diagramType: "SOFTWARE_ARCHITECTURE",
     title: "服务器与 Docker 入站",
     question: "网络包到达宿主机后，怎样进入容器里的 Java 进程？",
     summary:
@@ -297,6 +323,7 @@ export const graphPages: GraphPage[] = [
         key: "host-nic",
         label: "宿主机网卡",
         kind: "entry",
+        assetKey: "server",
         description: "入口",
         detail: "接收发往宿主机地址的网络帧和数据包。",
         edgeLabel: "进入内核",
@@ -305,6 +332,7 @@ export const graphPages: GraphPage[] = [
         key: "linux-stack",
         label: "Linux 网络栈",
         kind: "runtime",
+        assetKey: "server",
         description: "IP · TCP",
         detail: "完成 IP、TCP 处理，并进入本机转发/输入决策。",
         edgeLabel: "端口发布规则",
@@ -321,6 +349,7 @@ export const graphPages: GraphPage[] = [
         key: "bridge",
         label: "Docker bridge",
         kind: "component",
+        assetKey: "cloud",
         description: "宿主机软件网桥",
         detail: "连接同一 Docker daemon 上的容器虚拟接口并提供隔离。",
         edgeLabel: "veth",
@@ -337,6 +366,7 @@ export const graphPages: GraphPage[] = [
         key: "container-netns",
         label: "容器网络命名空间",
         kind: "runtime",
+        assetKey: "multi-instance-server",
         description: "隔离网络栈",
         detail: "通过容器侧 veth 进入独立接口、路由和 socket 视图。",
         multiplicity: {
@@ -361,6 +391,7 @@ export const graphPages: GraphPage[] = [
         key: "jvm-socket",
         label: "JVM / Tomcat socket",
         kind: "exit",
+        assetKey: "application-server",
         description: "出口",
         detail: "连接进入 Tomcat Connector 的处理范围。",
         drillTo: "spring-web-request-chain",
@@ -392,6 +423,7 @@ export const graphPages: GraphPage[] = [
     slug: "spring-web-request-chain",
     level: "L2",
     domain: "Spring MVC",
+    diagramType: "SEQUENCE",
     title: "Spring Web 请求链路",
     question: "Tomcat 接收请求后，Spring MVC 如何调用 Controller？",
     summary:
@@ -402,6 +434,7 @@ export const graphPages: GraphPage[] = [
         key: "connector",
         label: "Tomcat Connector",
         kind: "entry",
+        assetKey: "application-server",
         description: "入口",
         detail: "处理客户端连接并解析 HTTP 协议。",
         edgeLabel: "提交任务",
@@ -410,6 +443,7 @@ export const graphPages: GraphPage[] = [
         key: "executor",
         label: "Executor 工作线程",
         kind: "runtime",
+        assetKey: "multi-instance-server",
         description: "线程池",
         detail: "Connector 使用内部线程池或共享 Executor 执行请求。",
         multiplicity: {
@@ -427,6 +461,7 @@ export const graphPages: GraphPage[] = [
         key: "filter-chain",
         label: "Servlet FilterChain",
         kind: "component",
+        assetKey: "pipeline",
         description: "安全 · 日志 · 编码",
         detail: "Filter 可在进入 Spring MVC 前处理或提前终止请求。",
         edgeLabel: "继续链路",
@@ -435,6 +470,7 @@ export const graphPages: GraphPage[] = [
         key: "dispatcher",
         label: "DispatcherServlet",
         kind: "component",
+        assetKey: "application-server",
         description: "Front Controller",
         detail: "协调 Handler 查找、调用、返回值处理与异常解析。",
         edgeLabel: "查找 Handler",
@@ -467,6 +503,7 @@ export const graphPages: GraphPage[] = [
         key: "controller",
         label: "Controller 方法",
         kind: "component",
+        assetKey: "application-server",
         description: "Web 入口方法",
         detail: "接收应用请求并调用 Service；不应承载复杂业务规则。",
         drillTo: "service-business-transaction",
@@ -484,6 +521,7 @@ export const graphPages: GraphPage[] = [
         key: "response",
         label: "写回响应",
         kind: "exit",
+        assetKey: "web-application",
         description: "出口",
         detail: "响应经过拦截器与 Filter 退出路径后写入连接。",
       },
@@ -519,6 +557,7 @@ export const graphPages: GraphPage[] = [
     slug: "service-business-transaction",
     level: "L2",
     domain: "Spring Transaction",
+    diagramType: "LOGICAL_DATA_FLOW",
     title: "业务与事务链路",
     question: "Service 调用中，声明式事务如何包围数据库操作？",
     summary:
@@ -530,6 +569,7 @@ export const graphPages: GraphPage[] = [
         key: "controller-call",
         label: "Controller 调用 Service",
         kind: "entry",
+        assetKey: "application-server",
         description: "入口",
         detail: "从 Web 层进入应用服务公开方法。",
         edgeLabel: "代理拦截",
@@ -538,6 +578,7 @@ export const graphPages: GraphPage[] = [
         key: "proxy",
         label: "Spring AOP 代理",
         kind: "component",
+        assetKey: "pipeline",
         description: "方法边界",
         detail: "拦截从代理外部进入的调用；默认代理下内部自调用可能绕过拦截。",
         edgeLabel: "读取元数据",
@@ -546,6 +587,7 @@ export const graphPages: GraphPage[] = [
         key: "interceptor",
         label: "TransactionInterceptor",
         kind: "component",
+        assetKey: "pipeline",
         description: "@Transactional",
         detail: "读取传播、隔离、只读和回滚规则。",
         edgeLabel: "事务决策",
@@ -554,6 +596,7 @@ export const graphPages: GraphPage[] = [
         key: "transaction-manager",
         label: "事务管理器",
         kind: "component",
+        assetKey: "application-server",
         description: "开启 / 加入事务",
         detail: "根据传播行为创建或加入事务，并把资源绑定到当前线程。",
         edgeLabel: "调用目标",
@@ -570,6 +613,7 @@ export const graphPages: GraphPage[] = [
         key: "repository",
         label: "Repository / Mapper",
         kind: "component",
+        assetKey: "pipeline",
         description: "持久化边界",
         detail: "使用当前事务资源执行 SQL 或 ORM 操作。",
         edgeLabel: "SQL",
@@ -578,6 +622,7 @@ export const graphPages: GraphPage[] = [
         key: "mysql",
         label: "MySQL 操作",
         kind: "data",
+        assetKey: "relational-database",
         description: "查询 / 写入",
         detail: "执行 SQL，并受数据库事务与锁语义约束。",
         drillTo: "mysql-query-and-index",
@@ -595,6 +640,7 @@ export const graphPages: GraphPage[] = [
         key: "service-result",
         label: "返回 Controller",
         kind: "exit",
+        assetKey: "application-server",
         description: "出口",
         detail: "返回结果或重新抛出异常，由 Web 层生成响应。",
       },
@@ -631,6 +677,7 @@ export const graphPages: GraphPage[] = [
     slug: "mysql-query-and-index",
     level: "L3",
     domain: "MySQL / InnoDB",
+    diagramType: "LOGICAL_DATA_FLOW",
     title: "MySQL 查询与索引",
     question: "普通二级索引查询如何找到 InnoDB 完整行？",
     summary:
@@ -641,6 +688,7 @@ export const graphPages: GraphPage[] = [
         key: "jdbc",
         label: "JDBC 发送 SQL",
         kind: "entry",
+        assetKey: "application-server",
         description: "入口",
         detail: "通过已有 MySQL 连接发送参数化 SQL。",
         multiplicity: {
@@ -657,6 +705,7 @@ export const graphPages: GraphPage[] = [
         key: "session",
         label: "MySQL Session",
         kind: "runtime",
+        assetKey: "relational-database",
         description: "连接上下文",
         detail: "接收命令并保留认证、事务和会话状态。",
         edgeLabel: "解析",
@@ -689,6 +738,7 @@ export const graphPages: GraphPage[] = [
         key: "secondary-index",
         label: "二级索引 B+Tree",
         kind: "data",
+        assetKey: "stack-storage",
         description: "索引键 → 主键",
         detail: "沿 B+Tree 定位叶子记录，得到索引列和主键列。",
         edgeLabel: "取得主键",
@@ -705,6 +755,7 @@ export const graphPages: GraphPage[] = [
         key: "clustered-index",
         label: "聚簇索引",
         kind: "data",
+        assetKey: "relational-database",
         description: "主键 → 完整行",
         detail: "非覆盖查询使用主键再次定位保存完整行数据的叶子页。",
         edgeLabel: "访问页面",
@@ -713,6 +764,7 @@ export const graphPages: GraphPage[] = [
         key: "buffer-pool",
         label: "Buffer Pool",
         kind: "runtime",
+        assetKey: "cache",
         description: "缓存数据页",
         detail: "页面命中内存时直接读取；未命中才从存储载入。",
         edgeLabel: "结果行",
@@ -721,6 +773,7 @@ export const graphPages: GraphPage[] = [
         key: "result-set",
         label: "结果集返回",
         kind: "exit",
+        assetKey: "application-server",
         description: "出口",
         detail: "过滤和投影后，经 MySQL 协议返回应用。",
       },
@@ -757,6 +810,7 @@ export const graphPages: GraphPage[] = [
     slug: "jvm-thread-execution",
     level: "L3",
     domain: "JVM",
+    diagramType: "SEQUENCE",
     title: "JVM 线程执行",
     question: "Tomcat 工作线程如何在 JVM 中执行同步请求？",
     summary:
@@ -767,6 +821,7 @@ export const graphPages: GraphPage[] = [
         key: "queue",
         label: "工作队列",
         kind: "entry",
+        assetKey: "message-queue",
         description: "入口",
         detail: "请求任务等待可用 Worker；队列长度构成排队延迟。",
         multiplicity: {
@@ -782,6 +837,7 @@ export const graphPages: GraphPage[] = [
         key: "worker",
         label: "Java 工作线程",
         kind: "runtime",
+        assetKey: "multi-instance-server",
         description: "Executor Worker",
         detail: "取得任务并开始在当前 Java 线程上执行。",
         multiplicity: {
@@ -798,6 +854,7 @@ export const graphPages: GraphPage[] = [
         key: "stack",
         label: "Java 栈与栈帧",
         kind: "runtime",
+        assetKey: "stack-storage",
         description: "线程私有",
         detail: "保存局部变量、操作数栈、动态链接和返回信息。",
         edgeLabel: "执行",
@@ -814,6 +871,7 @@ export const graphPages: GraphPage[] = [
         key: "heap",
         label: "堆对象分配",
         kind: "data",
+        assetKey: "object-storage",
         description: "DTO · 集合 · 业务对象",
         detail: "请求处理中创建的对象通常在堆上分配，具体路径属于 JVM 实现。",
         edgeLabel: "需要时同步",
@@ -831,6 +889,7 @@ export const graphPages: GraphPage[] = [
         key: "blocking-io",
         label: "数据库 / 网络等待",
         kind: "runtime",
+        assetKey: "relational-database",
         description: "阻塞或 park",
         detail: "同步 I/O 等待期间，平台线程不能处理其他请求任务。",
         edgeLabel: "I/O 完成",
@@ -847,6 +906,7 @@ export const graphPages: GraphPage[] = [
         key: "complete",
         label: "线程归还池",
         kind: "exit",
+        assetKey: "multi-instance-server",
         description: "出口",
         detail: "Worker 结束当前任务，继续从队列取得下一个任务。",
       },
@@ -879,6 +939,7 @@ export const graphPages: GraphPage[] = [
     slug: "synchronized-and-jmm",
     level: "L4",
     domain: "Java Concurrency",
+    diagramType: "SEQUENCE",
     title: "synchronized 与 JMM",
     question: "进入和退出临界区时，互斥与可见性如何建立？",
     summary:
@@ -890,6 +951,7 @@ export const graphPages: GraphPage[] = [
         key: "entry",
         label: "到达同步点",
         kind: "entry",
+        assetKey: "multi-instance-server",
         description: "入口",
         detail: "求值锁对象，或确定 synchronized 方法对应的 monitor。",
         edgeLabel: "请求 monitor",
@@ -898,6 +960,7 @@ export const graphPages: GraphPage[] = [
         key: "acquire",
         label: "尝试获取 monitor",
         kind: "component",
+        assetKey: "auth-iam",
         description: "互斥入口",
         detail: "同一时刻只有持有者可以进入受该 monitor 保护的临界区。",
         edgeLabel: "竞争判断",
@@ -906,6 +969,7 @@ export const graphPages: GraphPage[] = [
         key: "contention",
         label: "无竞争 / 发生竞争",
         kind: "runtime",
+        assetKey: "multi-instance-server",
         description: "等待策略是实现细节",
         detail: "竞争线程需要等待；JVM 实现可选择自旋、阻塞或 park。",
         multiplicity: {
@@ -938,6 +1002,7 @@ export const graphPages: GraphPage[] = [
         key: "shared-state",
         label: "共享状态",
         kind: "data",
+        assetKey: "cache",
         description: "一致同步协议",
         detail: "其他线程的相关访问也必须遵守同一同步协议，否则仍可能数据竞争。",
         edgeLabel: "退出",
@@ -946,6 +1011,7 @@ export const graphPages: GraphPage[] = [
         key: "release",
         label: "释放 monitor",
         kind: "component",
+        assetKey: "auth-iam",
         description: "正常或异常退出",
         detail: "同步块正常完成或抛出异常时都必须释放 monitor。",
         edgeLabel: "内存顺序",
@@ -962,6 +1028,7 @@ export const graphPages: GraphPage[] = [
         key: "exit",
         label: "后继线程继续",
         kind: "exit",
+        assetKey: "multi-instance-server",
         description: "出口",
         detail: "当前线程继续执行，等待者获得后续竞争机会。",
       },

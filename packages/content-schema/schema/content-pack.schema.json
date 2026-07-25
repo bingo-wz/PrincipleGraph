@@ -19,6 +19,13 @@
         "$ref": "#/$defs/scenario"
       }
     },
+    "assetLibrary": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    },
     "pages": {
       "type": "array",
       "minItems": 1,
@@ -33,6 +40,62 @@
       "minLength": 2,
       "maxLength": 96,
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "localizedText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zh", "en"],
+      "properties": {
+        "zh": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "category", "glyphKey", "name", "description"],
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "category": {
+          "enum": [
+            "CLIENT",
+            "NETWORK",
+            "COMPUTE",
+            "DATA",
+            "STORAGE",
+            "MESSAGING",
+            "SECURITY"
+          ]
+        },
+        "glyphKey": {
+          "$ref": "#/$defs/stableKey"
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "description": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        }
+      }
     },
     "slug": {
       "type": "string",
@@ -340,6 +403,9 @@
           "type": "string",
           "minLength": 8,
           "maxLength": 1200
+        },
+        "assetKey": {
+          "$ref": "#/$defs/stableKey"
         },
         "multiplicity": {
           "$ref": "#/$defs/multiplicity"

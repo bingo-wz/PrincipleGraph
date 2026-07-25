@@ -27,7 +27,8 @@ PrincipleGraph 把“知识页”作为一个稳定抽象层级：一页只解�
 ## 当前能力
 
 - 8 个知识页、72 个主节点和连续 4 层以上下钻路径；
-- 默认适配视口的蛇形主链路，不需要横向拖动画布寻找下一步；
+- 软件架构图、序列图和逻辑数据流图三种可切换渲染器；
+- 20 个首批双语系统设计素材、7 个分类、搜索和复用位置；
 - 多实例、多线程、队列和连接池的 `N/T/Q/C/K/1` 数量语义；
 - 节点聚焦、说明面板、面包屑、来源返回和双向引用；
 - 页面与节点搜索、异常/变体说明；
@@ -66,6 +67,7 @@ npm test
 - [五阶段总体规划](docs/project-plan.md)
 - [首批 8 个知识页内容大纲](docs/m0/content-outline.md)
 - [低保真原型 Brief](docs/m0/prototype-brief.md)
+- [系统设计素材库](docs/m0/asset-library.md)
 - [5 人可用性测试脚本](docs/m0/usability-test.md)
 - [可用性测试记录表](docs/m0/usability-results.csv)
 - [技术审核签字表](docs/m0/technical-review.md)

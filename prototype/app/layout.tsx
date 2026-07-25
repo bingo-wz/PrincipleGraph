@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
     requestHeaders.get("x-forwarded-proto") ??
     (host.startsWith("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
-  const imageUrl = new URL("/og.png", origin).toString();
+  const imageUrl = new URL("/og-v2.png", origin).toString();
   const title = "PrincipleGraph · Java 原理链路";
   const description =
     "从一次 HTTP 请求出发，逐层理解微服务、Docker、Spring、MySQL、JVM 与并发原理。";
